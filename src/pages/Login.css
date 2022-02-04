@@ -1,0 +1,12 @@
+.login-page {
+  display: flex;
+}
+.login-card {
+  flex-direction: row-reverse;
+}
+
+.login-actions {
+  display: flex;
+  gap: 6px;
+  flex-direction: column;
+}
