@@ -1,7 +1,8 @@
-import React from 'react';
+/* eslint-disable react/jsx-no-comment-textnodes */
+import React, { useState } from 'react';
 import './Home.css';
 import ReactLogo from '../Images/logo512.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 
 import {
@@ -12,7 +13,19 @@ import {
   CardContent,
   Typography,
 } from '@mui/material';
+
 const Home = () => {
+  const [isToken, setIsToken] = useState(false);
+  const navigate = useNavigate();
+  const GetToken = () => {
+    if (localStorage.getItem('token')) {
+      setIsToken(true);
+    } else {
+      setIsToken(false);
+      navigate('/login');
+    }
+  };
+
   return (
     <>
       <Box>
@@ -30,10 +43,9 @@ const Home = () => {
                 className="nav-login-btn"
                 variant="contained"
                 color="primary"
+                onClick={() => GetToken()}
               >
-                <Link className="nav-login-link" to="/login">
-                  Login
-                </Link>
+                {isToken ? 'logout' : 'login'}
               </Button>
             }
           />
