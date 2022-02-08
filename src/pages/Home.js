@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
 import ReactLogo from '../Images/logo512.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 
 import {
@@ -16,13 +16,22 @@ import {
 
 const Home = () => {
   const [isToken, setIsToken] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      setIsToken(true);
+    }
+  }, []);
   const navigate = useNavigate();
-  const GetToken = () => {
+  const getToken = () => {
     if (localStorage.getItem('token')) {
       setIsToken(true);
     } else {
       setIsToken(false);
       navigate('/login');
+    }
+    if (isToken) {
+      setIsToken(false);
+      localStorage.removeItem('token');
     }
   };
 
@@ -43,7 +52,7 @@ const Home = () => {
                 className="nav-login-btn"
                 variant="contained"
                 color="primary"
-                onClick={() => GetToken()}
+                onClick={getToken}
               >
                 {isToken ? 'logout' : 'login'}
               </Button>
