@@ -2,6 +2,9 @@
   display: flex;
 }
 .login-card {
+  padding: 10px 10px;
+  background-color: rgb(4, 69, 153);
+  color: #fff;
   flex-direction: row-reverse;
 }
 
@@ -9,4 +12,14 @@
   display: flex;
   gap: 6px;
   flex-direction: column;
+  padding: 10px 10px;
+}
+.btn-submit {
+  background-color: rgb(4, 69, 153) !important;
+  color: #fff !important;
+}
+.btn-submit:hover {
+  border: 2px solid rgb(4, 69, 153);
+  background-color: #fff !important;
+  color: rgb(4, 69, 153) !important;
 }

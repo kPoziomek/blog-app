@@ -10,7 +10,7 @@ import {
   SvgIcon,
   TextField,
 } from '@mui/material';
-import axios from 'axios';
+import axios from '../helpers/axiosConfig';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -37,7 +37,6 @@ const Login = () => {
     })
       .then((res) => {
         const { data } = res;
-        localStorage.removeItem('token');
         localStorage.setItem('token', data.auth_token);
         navigate('/');
       })
@@ -82,11 +81,9 @@ const Login = () => {
                 </Link>
               </Avatar>
             }
-            title="Login Form"
+            title="PANEL LOGOWANIA"
           />
           <Paper className="login-actions">
-            <p>You can login ? I believe in you.</p>
-
             <TextField
               id="email"
               name="email"
@@ -107,7 +104,9 @@ const Login = () => {
               value={formik.values.password}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button className="btn-submit" type="submit">
+              Wyślij
+            </Button>
           </Paper>
         </Card>
       </Box>
