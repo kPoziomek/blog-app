@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CardHeader, Button, Box } from '@mui/material';
 import ReactLogo from '../../Images/logo512.png';
-import axiosConfig from '../../helpers/axiosConfig';
+import { authMe } from '../../helpers/axiosConfig';
 import './Nav.css';
 
 const Nav = () => {
@@ -12,7 +12,7 @@ const Nav = () => {
   useEffect(() => {
     if (localStorage.getItem('token')) {
       setIsToken(true);
-      axiosConfig.get('/auth/me').then((res) => {
+      authMe().then((res) => {
         const userData = res.data;
         setUserName(`${userData.firstName} ${userData.lastName} `);
       });

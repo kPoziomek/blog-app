@@ -10,7 +10,7 @@ import {
   SvgIcon,
   TextField,
 } from '@mui/material';
-import axios from '../helpers/axiosConfig';
+import { loginUserAPI } from '../helpers/axiosConfig';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
@@ -30,11 +30,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const logUser = (user) => {
-    axios({
-      method: 'post',
-      url: '/auth/login',
-      data: user,
-    })
+    loginUserAPI(user)
       .then((res) => {
         const { data } = res;
         localStorage.setItem('token', data.auth_token);

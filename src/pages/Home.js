@@ -1,11 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.css';
-import ReactLogo from '../Images/logo512.png';
-
-import { Box, Card, CardMedia, CardContent, Typography } from '@mui/material';
+import Main from './components/Main';
+import { getUserArticle } from '../helpers/axiosConfig';
+import { Box, Card } from '@mui/material';
 import Nav from './components/Nav';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
+  let [data, setData] = useState();
+  useEffect(() => {
+    getUserArticle()
+      .then((res) => {
+        let myData = res.data;
+        return setData(myData);
+      })
+      .then((result) => {
+        return result;
+      });
+  }, []);
+
+  console.log(data);
   return (
     <>
       <Box>
@@ -13,45 +27,15 @@ const Home = () => {
           <Nav />
 
           <main className="main-container">
-            <Card sx={{ maxWidth: 345 }}>
-              <Typography gutterBottom variant="h5" component="div">
-                React Blog
-              </Typography>
-              <CardMedia
-                component="img"
-                height="100"
-                image={ReactLogo}
-                alt="react blog"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  CARD ABOUT REACT
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Func fact about react
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card sx={{ maxWidth: 345 }}>
-              <Typography gutterBottom variant="h5" component="div">
-                React Blog
-              </Typography>
-              <CardMedia
-                component="img"
-                height="100"
-                image={ReactLogo}
-                alt="react blog"
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  CARD ABOUT REACT
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Func fact about react
-                </Typography>
-              </CardContent>
-            </Card>
+            {data
+              ? data.map((arr, index) => (
+                  <Link to={'/articles/' + arr.id} key={index}>
+                    <Main arr={arr} key={index} />
+                  </Link>
+                ))
+              : null}
           </main>
+
           <footer className="footer-container"></footer>
         </Card>
       </Box>
