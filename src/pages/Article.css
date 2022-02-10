@@ -1,0 +1,24 @@
+.mainArticle {
+  background-color: #ccc;
+  display: flex;
+  flex-direction: column;
+}
+.article-header {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.mainButton {
+  float: right;
+  background-color: #1976d2;
+  color: #fff;
+  padding: 10px 12px;
+  margin: 10px 10px;
+}
+.mainAvatar {
+  margin: 10px 10px;
+}
+.mainContainer {
+  min-width: 30vw;
+  height: 100vh;
+  background-color: white;
+}
