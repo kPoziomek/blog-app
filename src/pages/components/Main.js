@@ -5,8 +5,8 @@ import { Card, Typography, CardMedia, CardContent } from '@mui/material';
 const Main = (props) => {
   const prpData = props.arr;
   const prpAuthor = props.arr.author;
-  //   const getArticle = axiosConfig.get('/article').then((res) => res);
-  console.log(prpAuthor);
+  const prpContent = props.arr.content;
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <Typography gutterBottom variant="h5" component="div">
@@ -15,7 +15,7 @@ const Main = (props) => {
       <CardMedia component="img" image={ReactLogo} alt="react blog" />
       <CardContent>
         <Typography gutterBottom variant="h3" component="div">
-          {prpData.content}
+          {prpData.content.slice(0, 10)}
         </Typography>
         <Typography gutterBottom variant="h5" component="div">
           {prpData.summary}

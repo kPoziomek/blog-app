@@ -22,6 +22,10 @@ export const loginUserAPI = (data) => {
 export const authMe = () => {
   return instance.get('/auth/me');
 };
-export const getUserArticle = async () => {
+export const getArticles = async () => {
   return instance.get('/articles');
+};
+
+export const getSingleArticle = (id) => {
+  return instance.get(`articles/${id}`);
 };
