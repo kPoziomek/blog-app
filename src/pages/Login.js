@@ -77,7 +77,8 @@ const Login = () => {
                 </Link>
               </Avatar>
             }
-            title="PANEL LOGOWANIA"
+            title="Login Page"
+            s
           />
           <Paper className="login-actions">
             <TextField
@@ -101,7 +102,7 @@ const Login = () => {
             />
 
             <Button className="btn-submit" type="submit">
-              Wyślij
+              Send
             </Button>
           </Paper>
         </Card>

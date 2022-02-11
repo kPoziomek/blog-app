@@ -17,6 +17,8 @@ const Navigation = () => {
       setIsToken(true);
       authMe().then((res) => {
         const userData = res.data;
+        localStorage.setItem('tokenId', userData.id);
+        console.log(userData);
         setUserName(`${userData.firstName} ${userData.lastName} `);
       });
     }
@@ -27,6 +29,7 @@ const Navigation = () => {
     if (isToken) {
       setIsToken(false);
       localStorage.removeItem('token');
+      localStorage.removeItem('tokenId');
       setUserName();
     } else {
       navigate('/login');

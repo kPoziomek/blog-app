@@ -5,7 +5,6 @@ import { Card, Typography, CardMedia, CardContent } from '@mui/material';
 const Main = (props) => {
   const prpData = props.arr;
   const prpAuthor = props.arr.author;
-  const prpContent = props.arr.content;
 
   return (
     <Card sx={{ maxWidth: 345 }}>

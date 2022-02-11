@@ -29,3 +29,6 @@ export const getArticles = async () => {
 export const getSingleArticle = (id) => {
   return instance.get(`articles/${id}`);
 };
+export const postSingleArticle = (data) => {
+  return instance.post('/articles', data);
+};
