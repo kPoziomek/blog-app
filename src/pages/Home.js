@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import './Home.css';
-import Main from './components/Main';
+import BlogThumbnailContent from './components/BlogThumbnailContent';
 import { getArticles } from '../helpers/axiosConfig';
 import { Box, Card } from '@mui/material';
-// import Nav from './components/Nav';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   let [data, setData] = useState();
   useEffect(() => {
-    getArticles()
-      .then((res) => {
-        let myData = res.data;
-        return setData(myData);
-      })
-      .then((result) => {
-        return result;
-      });
+    getArticles().then((res) => {
+      let myData = res.data;
+      setData(myData);
+    });
   }, []);
 
   return (
@@ -24,17 +19,16 @@ const Home = () => {
       <Box>
         <Card>
           <div className="main-container">
-            {data
-              ? data.map((arr, index) => (
-                  <Link
-                    className="main-articles"
-                    to={'/articles/' + arr.id}
-                    key={index}
-                  >
-                    <Main arr={arr} key={index} />
-                  </Link>
-                ))
-              : null}
+            {data &&
+              data.map((arr, index) => (
+                <Link
+                  className="main-articles"
+                  to={'/articles/' + arr.id}
+                  key={index}
+                >
+                  <BlogThumbnailContent arr={arr} key={index} />
+                </Link>
+              ))}
           </div>
 
           <footer className="footer-container"></footer>

@@ -3,32 +3,35 @@ import {
   Card,
   CardActions,
   CardContent,
-  Typography,
   Button,
-  CardHeader,
-  SvgIcon,
   TextField,
 } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import React from 'react';
+import React, { useCallback } from 'react';
+import './CreateArticle.css';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { postSingleArticle } from '../helpers/axiosConfig';
-
-const MoreVertIcon = (props) => {
-  return (
-    <SvgIcon {...props}>
-      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-    </SvgIcon>
-  );
-};
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const CreateArticle = () => {
   const handlePostSend = (values) => {
     postSingleArticle(values);
-    console.log(values);
   };
-  const validationSchema = yup.object({});
+  const validationSchema = yup.object({
+    title: yup
+      .string('write Title')
+      .min(2, 'Write your title')
+      .required('Title required'),
+    content: yup
+      .string('Write content')
+      .min(10, 'Write your content')
+      .required('Content required'),
+    summary: yup
+      .string('write summary')
+      .min(2, 'Write your summary')
+      .required('Summary required'),
+  });
   const formik = useFormik({
     validationSchema,
     initialValues: {
@@ -38,52 +41,50 @@ const CreateArticle = () => {
     },
     onSubmit: handlePostSend,
   });
+  const handleContentChange = useCallback(
+    (value) => {
+      formik.setFieldValue('content', value);
+    },
+    [formik]
+  );
 
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box>
         <Card sx={{ minWidth: 400, maxWidth: 1200, mx: 'auto' }}>
-          <CardHeader
-            action={
-              <IconButton aria-label="settings">
-                <MoreVertIcon />
-              </IconButton>
-            }
-            title="Create your post"
-          ></CardHeader>
           <CardContent>
-            <Typography>id</Typography>
-            <Typography>createdAt</Typography>
-            <Typography>updatedAt</Typography>
-            <Typography>publishedAt</Typography>
-
             <TextField
               label="Title"
               id="title"
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
+              error={formik.touched.title && Boolean(formik.errors.title)}
+              helperText={formik.touched.title && formik.errors.title}
             />
-            <TextField
-              label="Content"
-              id="content"
-              name="content"
-              value={formik.values.content}
-              onChange={formik.handleChange}
-            />
-
-            <Typography>authorId</Typography>
+            <Box sm={{ height: 200 }}>
+              <ReactQuill
+                id="content"
+                name="content"
+                value={formik.values.content}
+                onChange={handleContentChange}
+                error={formik.touched.content && Boolean(formik.errors.content)}
+                helperText={formik.touched.content && formik.errors.content}
+              />
+            </Box>
             <TextField
               label="Summary"
               id="summary"
               name="summary"
               value={formik.values.summary}
               onChange={formik.handleChange}
+              error={formik.touched.summary && Boolean(formik.errors.summary)}
+              helperText={formik.touched.summary && formik.errors.summary}
             />
           </CardContent>
           <CardActions>
             <Button type="submit">Submit Post</Button>
-          </CardActions>{' '}
+          </CardActions>
         </Card>
       </Box>
     </form>

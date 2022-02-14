@@ -9,8 +9,11 @@
   flex-direction: initial;
   text-decoration: none;
 }
+.nav-toolbar {
+  display: inherit;
+}
 .nav-logo {
-  width: 60%;
+  width: 100%;
   display: flex;
   float: left;
   flex-direction: row;
@@ -21,6 +24,9 @@
 }
 .link-btn {
   text-decoration: none;
+}
+.nav-box {
+  display: flex;
 }
 .nav-user-text {
   color: #fff;

@@ -2,29 +2,24 @@ import React from 'react';
 import ReactLogo from '../../Images/logo512.png';
 import { Card, Typography, CardMedia, CardContent } from '@mui/material';
 
-const Main = (props) => {
-  const prpData = props.arr;
-  const prpAuthor = props.arr.author;
-
+const BlogThumbnailContent = ({ arr }) => {
+  const { title, summary, author } = arr;
   return (
     <Card sx={{ maxWidth: 345 }}>
       <Typography gutterBottom variant="h5" component="div">
-        {prpData.title}
+        {title}
       </Typography>
       <CardMedia component="img" image={ReactLogo} alt="react blog" />
       <CardContent>
-        <Typography gutterBottom variant="h3" component="div">
-          {prpData.content.slice(0, 10)}
-        </Typography>
         <Typography gutterBottom variant="h5" component="div">
-          {prpData.summary}
+          {summary}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {`${prpAuthor.firstName} ${prpAuthor.lastName}`}
+          {`${author.firstName} ${author.lastName}`}
         </Typography>
       </CardContent>
     </Card>
   );
 };
 
-export default Main;
+export default BlogThumbnailContent;

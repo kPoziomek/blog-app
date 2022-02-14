@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { CardHeader, Button, Box } from '@mui/material';
+import { Button, Box, AppBar, Toolbar } from '@mui/material';
 import ReactLogo from '../Images/logo512.png';
 import { authMe } from '../helpers/axiosConfig';
 
@@ -17,8 +17,6 @@ const Navigation = () => {
       setIsToken(true);
       authMe().then((res) => {
         const userData = res.data;
-        localStorage.setItem('tokenId', userData.id);
-        console.log(userData);
         setUserName(`${userData.firstName} ${userData.lastName} `);
       });
     }
@@ -29,7 +27,7 @@ const Navigation = () => {
     if (isToken) {
       setIsToken(false);
       localStorage.removeItem('token');
-      localStorage.removeItem('tokenId');
+      navigate('/');
       setUserName();
     } else {
       navigate('/login');
@@ -37,9 +35,8 @@ const Navigation = () => {
   };
   return (
     <>
-      <CardHeader
-        className="nav-container"
-        title={
+      <AppBar position="static" className="nav-container">
+        <Toolbar disableGutters className="nav-toolbar">
           <Box className="nav-logo">
             <Link to="/" className="nav-link-box">
               <div className="logo">
@@ -49,45 +46,35 @@ const Navigation = () => {
             </Link>
             <div className="user">
               <h3 className="nav-user-text">
-                {userName ? `Hello ${userName}` : 'Hello Stranger'}
+                {`Hello ${userName ?? 'Stranger'} `}
               </h3>
             </div>
-          </Box>
-        }
-        avatar={
-          isToken ? (
-            <div>
-              <Link className="link-btn" to="/createArticle">
-                <Button
-                  className="nav-login-btn"
-                  variant="contained"
-                  color="primary"
-                  sx={{ mx: 2 }}
-                >
-                  Create Article
-                </Button>
-              </Link>
+            <Box className="nav-box">
+              {isToken && (
+                <Link className="link-btn" to="/create">
+                  <Button
+                    className="nav-login-btn"
+                    variant="contained"
+                    color="primary"
+                    sx={{ mx: 2, p: 1.3 }}
+                  >
+                    Create Article
+                  </Button>
+                </Link>
+              )}
               <Button
                 className="nav-login-btn"
                 variant="contained"
                 color="primary"
+                sx={{ mx: 2 }}
                 onClick={handleLogin}
               >
-                logout
+                {isToken ? 'logout' : 'login'}
               </Button>
-            </div>
-          ) : (
-            <Button
-              className="nav-login-btn"
-              variant="contained"
-              color="primary"
-              onClick={handleLogin}
-            >
-              Login
-            </Button>
-          )
-        }
-      />
+            </Box>
+          </Box>
+        </Toolbar>
+      </AppBar>
     </>
   );
 };

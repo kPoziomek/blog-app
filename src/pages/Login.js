@@ -7,7 +7,6 @@ import {
   Card,
   CardHeader,
   Paper,
-  SvgIcon,
   TextField,
 } from '@mui/material';
 import { loginUserAPI } from '../helpers/axiosConfig';
@@ -15,16 +14,9 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import HomeIcon from '@mui/icons-material/Home';
 
 import './Login.css';
-
-const HomeIcon = (props) => {
-  return (
-    <SvgIcon {...props}>
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />ś
-    </SvgIcon>
-  );
-};
 
 const Login = () => {
   const navigate = useNavigate();
@@ -78,7 +70,6 @@ const Login = () => {
               </Avatar>
             }
             title="Login Page"
-            s
           />
           <Paper className="login-actions">
             <TextField
