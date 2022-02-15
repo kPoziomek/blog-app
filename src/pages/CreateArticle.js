@@ -5,6 +5,11 @@ import {
   CardContent,
   Button,
   TextField,
+  AppBar,
+  Typography,
+  Toolbar,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import React, { useCallback } from 'react';
 import './CreateArticle.css';
@@ -15,8 +20,17 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
 const CreateArticle = () => {
+  const createDateNow = () => {
+    let utc = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
+    return utc;
+  };
+
   const handlePostSend = (values) => {
-    postSingleArticle(values);
+    const newValues = {
+      ...values,
+      ...(values.post && { publishedAt: createDateNow() }),
+    };
+    postSingleArticle(newValues);
   };
   const validationSchema = yup.object({
     title: yup
@@ -38,6 +52,7 @@ const CreateArticle = () => {
       title: '',
       summary: '',
       content: '',
+      post: false,
     },
     onSubmit: handlePostSend,
   });
@@ -50,10 +65,30 @@ const CreateArticle = () => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Box>
+      <Box sx={{ m: 1 }}>
         <Card sx={{ minWidth: 400, maxWidth: 1200, mx: 'auto' }}>
-          <CardContent>
+          <AppBar position="static" className="article-nav">
+            <Toolbar className="article-toolbar">
+              <Typography variant="h6" noWrap component="div">
+                Create your post
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <CardContent className="article-content">
+            <FormControlLabel
+              className="article-elements"
+              control={
+                <Checkbox
+                  id="post"
+                  name="post"
+                  checked={formik.values.post}
+                  onChange={formik.handleChange}
+                />
+              }
+              label="Post"
+            />
             <TextField
+              className="article-elements"
               label="Title"
               id="title"
               name="title"
@@ -82,8 +117,10 @@ const CreateArticle = () => {
               helperText={formik.touched.summary && formik.errors.summary}
             />
           </CardContent>
-          <CardActions>
-            <Button type="submit">Submit Post</Button>
+          <CardActions className="article-submit">
+            <Button type="submit" variant="contained" color="primary">
+              Submit Post
+            </Button>
           </CardActions>
         </Card>
       </Box>
