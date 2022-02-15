@@ -7,83 +7,53 @@ import {
   Card,
   CardHeader,
   Paper,
-  SvgIcon,
   TextField,
 } from '@mui/material';
-import MuiAlert from '@material-ui/lab/Alert';
-import Stack from '@mui/material/Stack';
-import axios from 'axios';
-import React, { useState } from 'react';
+import { loginUserAPI } from '../helpers/axiosConfig';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import * as yup from 'yup';
+import { useFormik } from 'formik';
+import HomeIcon from '@mui/icons-material/Home';
 
 import './Login.css';
 
-const Alert = (props) => {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-};
-
-const HomeIcon = (props) => {
-  return (
-    <SvgIcon {...props}>
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />ś
-    </SvgIcon>
-  );
-};
-
-const Login = (props) => {
+const Login = () => {
   const navigate = useNavigate();
-  const [emailValue, setEmailValue] = useState('');
-  const [passwordValue, setPasswordValue] = useState('');
-
-  const [error, setError] = useState('');
 
   const logUser = (user) => {
-    axios({
-      method: 'post',
-      url: '/auth/login',
-      data: user,
-    })
+    loginUserAPI(user)
       .then((res) => {
         const { data } = res;
-        localStorage.removeItem('token');
         localStorage.setItem('token', data.auth_token);
         navigate('/');
-        // redirect(isLogin);
       })
       .catch((res) => console.log(res));
   };
 
-  // const redirect = (value) => {
-  //   if (value) {
-  //     navigate('/', { state: { isLogin: value } });
-  //   }
-  // };
-
-  const onEmailChange = (e) => {
-    let emailValue = setEmailValue(e.target.value);
-    return emailValue;
+  const handleSubmit = (values) => {
+    logUser(values);
   };
-
-  const onPasswordChange = (e) => {
-    let passValue = setPasswordValue(e.target.value);
-    return passValue;
-  };
-  const handleSubmit = () => {
-    if (emailValue === '' || passwordValue === '') {
-      setError('Uzupełnij pola wymagane');
-      return;
-    }
-    const userLogin = {
-      email: emailValue,
-      password: passwordValue,
-    };
-    setEmailValue('');
-    setPasswordValue('');
-    logUser(userLogin);
-    return userLogin;
-  };
+  const validationSchema = yup.object({
+    email: yup
+      .string('Podaj email')
+      .email('Podaj poprawny email')
+      .required('email wymagany'),
+    password: yup
+      .string('Podaj hasło')
+      .min(6, ' hasło musi zawierać więcej niz 6 znaków')
+      .required('hasło wymagane'),
+  });
+  const formik = useFormik({
+    validationSchema,
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    onSubmit: handleSubmit,
+  });
   return (
-    <form>
+    <form onSubmit={formik.handleSubmit}>
       <Box
         className="login-page"
         component="span"
@@ -99,34 +69,35 @@ const Login = (props) => {
                 </Link>
               </Avatar>
             }
-            title="Login Form"
+            title="Login Page"
           />
           <Paper className="login-actions">
-            <p>You can login ? I believe in you.</p>
-
             <TextField
-              label={'Email'}
-              onChange={onEmailChange}
-              value={emailValue}
+              id="email"
+              name="email"
+              label="e-mail"
+              onChange={formik.handleChange}
+              value={formik.values.email}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
             />
             <TextField
-              label={'Password'}
+              id="password"
+              name="password"
+              label="Password"
               type="password"
-              onChange={onPasswordChange}
-              value={passwordValue}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+              onChange={formik.handleChange}
+              value={formik.values.password}
             />
 
-            <Button onClick={handleSubmit}>Submit</Button>
+            <Button className="btn-submit" type="submit">
+              Send
+            </Button>
           </Paper>
         </Card>
       </Box>
-      {error && (
-        <Stack sx={{ width: '20%', mx: 'auto' }}>
-          <Alert severity="error" onClick={() => setError(null)}>
-            {error}
-          </Alert>
-        </Stack>
-      )}
     </form>
   );
 };

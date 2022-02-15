@@ -1,47 +1,15 @@
-.nav-container {
-  display: flex;
-
-  flex-direction: row-reverse;
-  padding: 0 10px;
-}
-.nav-logo {
-  display: flex;
-  float: left;
-}
-.nav-img {
-  width: 25px;
-  height: 25px;
-  padding: 10px;
-  text-align: center;
-  line-height: 25px;
-}
-.nav-text {
-  color: gray;
-
-  width: 100px;
-  padding: 10px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.nav-login-btn {
-}
-.nav-login-link {
-  background-color: transparent;
-  color: white;
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline;
-  margin: 0;
-  padding: 0;
-}
-
 .main-container {
+  margin: 10px 0;
   padding: 0 10px;
   display: flex;
+
   gap: 10px;
   min-height: 500px;
 }
+.main-articles {
+  text-decoration: none;
+}
 .footer-container {
+  padding: 10px 10px;
+  background-color: rgb(4, 69, 153);
 }
