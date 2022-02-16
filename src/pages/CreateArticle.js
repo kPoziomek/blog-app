@@ -12,25 +12,23 @@ import {
   Checkbox,
 } from '@mui/material';
 import React, { useCallback } from 'react';
-import './CreateArticle.css';
 import { useFormik } from 'formik';
+import classNames from 'classnames/bind';
+
+import './CreateArticle.css';
 import * as yup from 'yup';
 import { postSingleArticle } from '../helpers/axiosConfig';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useNavigate } from 'react-router-dom';
 
 const CreateArticle = () => {
-  const createDateNow = () => {
-    let utc = new Date().toJSON().slice(0, 10).replace(/-/g, '/');
-    return utc;
-  };
-
+  const navigate = useNavigate();
   const handlePostSend = (values) => {
-    const newValues = {
-      ...values,
-      ...(values.post && { publishedAt: createDateNow() }),
-    };
-    postSingleArticle(newValues);
+    postSingleArticle(values).then((data) => {
+      const { id } = data.data;
+      navigate(`/articles/${id}`);
+    });
   };
   const validationSchema = yup.object({
     title: yup
@@ -39,7 +37,7 @@ const CreateArticle = () => {
       .required('Title required'),
     content: yup
       .string('Write content')
-      .min(10, 'Write your content')
+      .min(2, 'Write your title')
       .required('Content required'),
     summary: yup
       .string('write summary')
@@ -52,7 +50,7 @@ const CreateArticle = () => {
       title: '',
       summary: '',
       content: '',
-      post: false,
+      publish: false,
     },
     onSubmit: handlePostSend,
   });
@@ -62,6 +60,10 @@ const CreateArticle = () => {
     },
     [formik]
   );
+
+  let errorClass = classNames({
+    error: formik.touched.content && Boolean(formik.errors.content),
+  });
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -80,8 +82,8 @@ const CreateArticle = () => {
               control={
                 <Checkbox
                   id="post"
-                  name="post"
-                  checked={formik.values.post}
+                  name="publish"
+                  checked={formik.values.publish}
                   onChange={formik.handleChange}
                 />
               }
@@ -98,16 +100,24 @@ const CreateArticle = () => {
               helperText={formik.touched.title && formik.errors.title}
             />
             <Box sm={{ height: 200 }}>
-              <ReactQuill
-                id="content"
-                name="content"
-                value={formik.values.content}
-                onChange={handleContentChange}
-                error={formik.touched.content && Boolean(formik.errors.content)}
-                helperText={formik.touched.content && formik.errors.content}
-              />
+              <div className={errorClass}>
+                <ReactQuill
+                  id="content"
+                  name="content"
+                  value={formik.values.content}
+                  onChange={handleContentChange}
+                  error={
+                    formik.touched.content && Boolean(formik.errors.content)
+                  }
+                  helperText={formik.touched.content && formik.errors.content}
+                />
+              </div>
+              {formik.touched.content && Boolean(formik.errors.content) && (
+                <p className="showText">{formik.errors.content}</p>
+              )}{' '}
             </Box>
             <TextField
+              className="article-elements"
               label="Summary"
               id="summary"
               name="summary"

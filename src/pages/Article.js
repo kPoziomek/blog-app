@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getSingleArticle } from '../helpers/axiosConfig';
 import HomeIcon from '@mui/icons-material/Home';
+
 import './Article.css';
 
 const Article = () => {
@@ -42,11 +43,9 @@ const Article = () => {
           />
 
           <section>
-            {articleData.title} {id}
+            <h3>{articleData.title}</h3>
             <img src="" alt="" />
-            <div>
-              <p>{articleData.content} </p>
-            </div>
+            <div dangerouslySetInnerHTML={{ __html: articleData.content }} />
           </section>
         </Card>
       )}
