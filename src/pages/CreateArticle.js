@@ -14,11 +14,6 @@ import {
 import React, { useCallback } from 'react';
 import { useFormik } from 'formik';
 import classNames from 'classnames/bind';
-<<<<<<< HEAD
-
-=======
-import styles from './CreateArticle.css';
->>>>>>> dbfca7f928f5393a60e514a4fc4634d498b2d66b
 import './CreateArticle.css';
 import * as yup from 'yup';
 import { postSingleArticle } from '../helpers/axiosConfig';
@@ -26,17 +21,12 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
 
-classNames.bind(styles);
 const CreateArticle = () => {
   const navigate = useNavigate();
   const handlePostSend = (values) => {
     postSingleArticle(values).then((data) => {
       const { id } = data.data;
-<<<<<<< HEAD
       navigate(`/articles/${id}`);
-=======
-      navigate('/articles/' + id);
->>>>>>> dbfca7f928f5393a60e514a4fc4634d498b2d66b
     });
   };
   const validationSchema = yup.object({
@@ -44,14 +34,10 @@ const CreateArticle = () => {
       .string('write Title')
       .min(2, 'Write your title')
       .required('Title required'),
-<<<<<<< HEAD
     content: yup
       .string('Write content')
       .min(2, 'Write your title')
       .required('Content required'),
-=======
-    content: yup.string('Write content').required('Content required'),
->>>>>>> dbfca7f928f5393a60e514a4fc4634d498b2d66b
     summary: yup
       .string('write summary')
       .min(2, 'Write your summary')
@@ -77,13 +63,6 @@ const CreateArticle = () => {
   let errorClass = classNames({
     error: formik.touched.content && Boolean(formik.errors.content),
   });
-<<<<<<< HEAD
-=======
-  let errorText = classNames('hideText', {
-    hideText: !formik.touched.content && Boolean(formik.errors.content),
-    showText: formik.touched.content && Boolean(formik.errors.content),
-  });
->>>>>>> dbfca7f928f5393a60e514a4fc4634d498b2d66b
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -132,13 +111,9 @@ const CreateArticle = () => {
                   helperText={formik.touched.content && formik.errors.content}
                 />
               </div>
-<<<<<<< HEAD
               {formik.touched.content && Boolean(formik.errors.content) && (
                 <p className="showText">{formik.errors.content}</p>
-              )}{' '}
-=======
-              <p className={errorText}>Fill up content field</p>
->>>>>>> dbfca7f928f5393a60e514a4fc4634d498b2d66b
+              )}
             </Box>
             <TextField
               className="article-elements"
