@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getSingleArticle } from '../helpers/axiosConfig';
 import HomeIcon from '@mui/icons-material/Home';
+import ReactMarkdown from 'react-markdown';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 import './Article.css';
 
 const Article = () => {
@@ -42,11 +46,13 @@ const Article = () => {
           />
 
           <section>
-            {articleData.title} {id}
+            <ReactMarkdown children={articleData.title} />
             <img src="" alt="" />
-            <div>
-              <p>{articleData.content} </p>
-            </div>
+            <ReactQuill
+              value={articleData.content}
+              readOnly={true}
+              theme={'bubble'}
+            />
           </section>
         </Card>
       )}
