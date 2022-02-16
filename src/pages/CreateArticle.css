@@ -46,6 +46,7 @@
 }
 .showText {
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+<<<<<<< HEAD
   font-size: 0.75rem;
   line-height: 1.66;
   letter-spacing: 0.03333em;
@@ -55,6 +56,17 @@
   margin-right: 14px;
   margin-bottom: 0;
   margin-left: 14px; */
+=======
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
+  text-align: left;
+  margin-top: 3px;
+  margin-right: 14px;
+  margin-bottom: 0;
+  margin-left: 14px;
+>>>>>>> dbfca7f928f5393a60e514a4fc4634d498b2d66b
   color: #d32f2f;
   display: flex;
 }
