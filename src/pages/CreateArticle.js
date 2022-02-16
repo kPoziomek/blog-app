@@ -89,6 +89,7 @@ const CreateArticle = () => {
               label="Post"
             />
             <TextField
+              fullWidth
               className="article-elements"
               label="Title"
               id="title"
@@ -116,6 +117,7 @@ const CreateArticle = () => {
               )}
             </Box>
             <TextField
+              fullWidth
               className="article-elements"
               label="Summary"
               id="summary"
@@ -126,8 +128,13 @@ const CreateArticle = () => {
               helperText={formik.touched.summary && formik.errors.summary}
             />
           </CardContent>
-          <CardActions className="article-submit">
-            <Button type="submit" variant="contained" color="primary">
+          <CardActions>
+            <Button
+              className="article-submit"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Submit Post
             </Button>
           </CardActions>

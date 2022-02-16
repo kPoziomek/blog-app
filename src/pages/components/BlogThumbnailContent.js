@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactLogo from '../../Images/logo512.png';
 import { Card, Typography, CardMedia, CardContent } from '@mui/material';
+import './BlogThumbnailContent.css';
 
 const BlogThumbnailContent = ({ arr }) => {
   const { title, summary, author } = arr;
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card className="thumbnail-main" sx={{ maxWidth: 345 }}>
       <Typography gutterBottom variant="h5" component="div">
         {title}
       </Typography>

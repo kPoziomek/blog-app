@@ -6,16 +6,15 @@
   justify-content: space-between;
   padding: 5px 10px;
 }
-.article-content {
+/* .article-content {
   display: flex;
   flex-direction: column;
-}
+} */
 .content {
   height: 100%;
 }
 .article-submit {
-  flex-direction: column;
-  align-items: flex-end !important;
+  margin-left: auto !important;
 }
 .article-elements {
   margin: 10px 0 !important;
