@@ -32,3 +32,13 @@ export const getSingleArticle = (id) => {
 export const postSingleArticle = (data) => {
   return instance.post('/articles', data);
 };
+export const getMyArticles = () => {
+  return instance.get(`/articles/my`);
+};
+export const postMyArticle = (id) => {
+  return instance.patch(`/articles/${id}/publish`);
+};
+
+export const deleteMyArticle = (id) => {
+  return instance.delete(`/articles/${id}`);
+};

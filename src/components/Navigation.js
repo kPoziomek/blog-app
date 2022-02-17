@@ -51,16 +51,42 @@ const Navigation = () => {
             </div>
             <Box className="nav-box">
               {isToken && (
-                <Link className="link-btn" to="/create">
-                  <Button
-                    className="nav-login-btn"
-                    variant="contained"
-                    color="primary"
-                    sx={{ mx: 2, p: 1.3 }}
+                <>
+                  <Link className="link-btn" to="/">
+                    <Button
+                      className="nav-login-btn"
+                      variant="contained"
+                      color="primary"
+                      sx={{ mx: 2, p: 1.3 }}
+                    >
+                      home
+                    </Button>
+                  </Link>
+                  <Link className="link-btn" to="/my">
+                    <Button
+                      className="nav-login-btn"
+                      variant="contained"
+                      color="primary"
+                      sx={{ mx: 2, p: 1.3 }}
+                    >
+                      My Article
+                    </Button>
+                  </Link>
+                  <Link
+                    className="link-btn"
+                    to="/carticle"
+                    onClick={() => null}
                   >
-                    Create Article
-                  </Button>
-                </Link>
+                    <Button
+                      className="nav-login-btn"
+                      variant="contained"
+                      color="primary"
+                      sx={{ mx: 2, p: 1.3 }}
+                    >
+                      Create Article
+                    </Button>
+                  </Link>
+                </>
               )}
               <Button
                 className="nav-login-btn"
