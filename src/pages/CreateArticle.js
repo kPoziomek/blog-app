@@ -35,7 +35,7 @@ const CreateArticle = () => {
       .required('Title required'),
     content: yup
       .string('Write content')
-      .min(2, 'Write your title')
+      .min(2, 'Write your content')
       .required('Content required'),
     summary: yup
       .string('write summary')
