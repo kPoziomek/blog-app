@@ -32,3 +32,6 @@ export const getSingleArticle = (id) => {
 export const postSingleArticle = (data) => {
   return instance.post('/articles', data);
 };
+export const getMyArticles = () => {
+  return instance.get(`/articles/my`);
+};
