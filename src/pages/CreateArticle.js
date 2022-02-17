@@ -11,18 +11,19 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useFormik } from 'formik';
-import classNames from 'classnames/bind';
+
 import './CreateArticle.css';
 import * as yup from 'yup';
 import { postSingleArticle } from '../helpers/axiosConfig';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from 'react-router-dom';
+import QuillComponent from './components/QuillComponent';
 
 const CreateArticle = () => {
+  const [childData, setChildData] = useState('');
   const navigate = useNavigate();
+
   const handlePostSend = (values) => {
     postSingleArticle(values).then((data) => {
       const { id } = data.data;
@@ -54,15 +55,11 @@ const CreateArticle = () => {
     onSubmit: handlePostSend,
   });
   const handleContentChange = useCallback(
-    (value) => {
-      formik.setFieldValue('content', value);
+    (childData) => {
+      formik.setFieldValue('content', childData);
     },
     [formik]
   );
-
-  let errorClass = classNames({
-    error: formik.touched.content && Boolean(formik.errors.content),
-  });
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -100,21 +97,11 @@ const CreateArticle = () => {
               helperText={formik.touched.title && formik.errors.title}
             />
             <Box sm={{ height: 200 }}>
-              <div className={errorClass}>
-                <ReactQuill
-                  id="content"
-                  name="content"
-                  value={formik.values.content}
-                  onChange={handleContentChange}
-                  error={
-                    formik.touched.content && Boolean(formik.errors.content)
-                  }
-                  helperText={formik.touched.content && formik.errors.content}
-                />
-              </div>
-              {formik.touched.content && Boolean(formik.errors.content) && (
-                <p className="showText">{formik.errors.content}</p>
-              )}
+              <QuillComponent
+                value={formik.values.content}
+                onChange={handleContentChange}
+                error={formik.touched.content && formik.errors.content}
+              />
             </Box>
             <TextField
               fullWidth
