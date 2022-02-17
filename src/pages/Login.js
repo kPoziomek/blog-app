@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 import {
   Avatar,
   Box,
@@ -15,12 +13,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import HomeIcon from '@mui/icons-material/Home';
-
 import './Login.css';
-
 const Login = () => {
   const navigate = useNavigate();
-
   const logUser = (user) => {
     loginUserAPI(user)
       .then((res) => {
@@ -30,7 +25,6 @@ const Login = () => {
       })
       .catch((res) => console.log(res));
   };
-
   const handleSubmit = (values) => {
     logUser(values);
   };
@@ -53,9 +47,8 @@ const Login = () => {
     onSubmit: handleSubmit,
   });
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={formik.handleSubmit} className="login-page">
       <Box
-        className="login-page"
         component="span"
         sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
       >

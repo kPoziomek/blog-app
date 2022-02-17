@@ -5,18 +5,28 @@ import {
   CardContent,
   Button,
   TextField,
+  AppBar,
+  Typography,
+  Toolbar,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import React, { useCallback } from 'react';
-import './CreateArticle.css';
 import { useFormik } from 'formik';
+import './CreateArticle.css';
 import * as yup from 'yup';
 import { postSingleArticle } from '../helpers/axiosConfig';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { useNavigate } from 'react-router-dom';
+import QuillComponent from './components/QuillComponent';
 
 const CreateArticle = () => {
+  const navigate = useNavigate();
+
   const handlePostSend = (values) => {
-    postSingleArticle(values);
+    postSingleArticle(values).then((data) => {
+      const { id } = data.data;
+      navigate(`/articles/${id}`);
+    });
   };
   const validationSchema = yup.object({
     title: yup
@@ -25,7 +35,7 @@ const CreateArticle = () => {
       .required('Title required'),
     content: yup
       .string('Write content')
-      .min(10, 'Write your content')
+      .min(2, 'Write your content')
       .required('Content required'),
     summary: yup
       .string('write summary')
@@ -38,22 +48,44 @@ const CreateArticle = () => {
       title: '',
       summary: '',
       content: '',
+      publish: false,
     },
     onSubmit: handlePostSend,
   });
   const handleContentChange = useCallback(
-    (value) => {
-      formik.setFieldValue('content', value);
+    (childData) => {
+      formik.setFieldValue('content', childData);
     },
     [formik]
   );
 
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Box>
+      <Box sx={{ m: 1 }}>
         <Card sx={{ minWidth: 400, maxWidth: 1200, mx: 'auto' }}>
-          <CardContent>
+          <AppBar position="static" className="article-nav">
+            <Toolbar className="article-toolbar">
+              <Typography variant="h6" noWrap component="div">
+                Create your post
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <CardContent className="article-content">
+            <FormControlLabel
+              className="article-elements"
+              control={
+                <Checkbox
+                  id="post"
+                  name="publish"
+                  checked={formik.values.publish}
+                  onChange={formik.handleChange}
+                />
+              }
+              label="Post"
+            />
             <TextField
+              fullWidth
+              className="article-elements"
               label="Title"
               id="title"
               name="title"
@@ -63,16 +95,15 @@ const CreateArticle = () => {
               helperText={formik.touched.title && formik.errors.title}
             />
             <Box sm={{ height: 200 }}>
-              <ReactQuill
-                id="content"
-                name="content"
+              <QuillComponent
                 value={formik.values.content}
                 onChange={handleContentChange}
-                error={formik.touched.content && Boolean(formik.errors.content)}
-                helperText={formik.touched.content && formik.errors.content}
+                error={formik.touched.content && formik.errors.content}
               />
             </Box>
             <TextField
+              fullWidth
+              className="article-elements"
               label="Summary"
               id="summary"
               name="summary"
@@ -83,7 +114,14 @@ const CreateArticle = () => {
             />
           </CardContent>
           <CardActions>
-            <Button type="submit">Submit Post</Button>
+            <Button
+              className="article-submit"
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
+              Submit Post
+            </Button>
           </CardActions>
         </Card>
       </Box>

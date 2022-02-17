@@ -1,3 +1,21 @@
+.article-nav {
+  display: flex;
+  flex-direction: row;
+}
+.article-toolbar {
+  justify-content: space-between;
+  padding: 5px 10px;
+}
+.content {
+  height: 100%;
+}
+.article-submit {
+  margin-left: auto !important;
+}
+.article-elements {
+  margin: 10px 0 !important;
+}
+
 .ql-container {
   min-height: 10rem;
   height: 100%;
