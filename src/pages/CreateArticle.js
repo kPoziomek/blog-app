@@ -11,9 +11,8 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useFormik } from 'formik';
-
 import './CreateArticle.css';
 import * as yup from 'yup';
 import { postSingleArticle } from '../helpers/axiosConfig';
@@ -21,7 +20,6 @@ import { useNavigate } from 'react-router-dom';
 import QuillComponent from './components/QuillComponent';
 
 const CreateArticle = () => {
-  const [childData, setChildData] = useState('');
   const navigate = useNavigate();
 
   const handlePostSend = (values) => {

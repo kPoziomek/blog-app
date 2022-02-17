@@ -34,22 +34,3 @@
   overflow-y: auto;
   width: 100%;
 }
-
-.error {
-  border: 1px solid red;
-
-  display: block;
-}
-.hideText {
-  display: none;
-}
-.showText {
-  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  font-size: 0.75rem;
-  line-height: 1.66;
-  letter-spacing: 0.03333em;
-
-  margin: 3px 14px 0;
-  color: #d32f2f;
-  display: flex;
-}
