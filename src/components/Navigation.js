@@ -72,7 +72,11 @@ const Navigation = () => {
                       My Article
                     </Button>
                   </Link>
-                  <Link className="link-btn" to="/create">
+                  <Link
+                    className="link-btn"
+                    to="/carticle"
+                    onClick={() => null}
+                  >
                     <Button
                       className="nav-login-btn"
                       variant="contained"
