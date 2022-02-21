@@ -1,6 +1,6 @@
 import ReactQuill from 'react-quill';
 import classNames from 'classnames';
-import './QuillComponent.css';
+import './UiQuillComponent.css';
 import 'react-quill/dist/quill.snow.css';
 
 const UiQuillComponent = ({ onChange, value, error }) => {

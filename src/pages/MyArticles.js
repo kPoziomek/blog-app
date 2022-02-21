@@ -5,8 +5,6 @@ import {
   CardActions,
   CardContent,
   Typography,
-  Alert,
-  AlertTitle,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getMyArticles } from '../helpers/axiosConfig';
@@ -26,11 +24,7 @@ const MyArticles = () => {
   }, []);
 
   const editPost = (value) => {
-    navigate('/editedarticle');
-    // navigate('/create', { state: value });
-
-    console.log('edit', value);
-    console.log(navigate);
+    navigate('/editedarticle', { state: value });
   };
   const postPost = (id) => {
     postMyArticle(id).then((res) => {
@@ -52,16 +46,11 @@ const MyArticles = () => {
         });
         setMyArticles(filteredArticle);
       }
-      console.log('delete', response);
     });
   };
 
   return (
     <div>
-      {/* <Alert severity="warning">
-        <AlertTitle>Warning</AlertTitle>
-        This is a warning alert — <strong>check it out!</strong>
-      </Alert> */}
       <Box className="my-article">
         {myArticles &&
           myArticles.map((arr) => {

@@ -62,7 +62,7 @@ const Navigation = () => {
                       home
                     </Button>
                   </Link>
-                  <Link className="link-btn" to="/my">
+                  <Link className="link-btn" to="/myarticles">
                     <Button
                       className="nav-login-btn"
                       variant="contained"
@@ -74,7 +74,7 @@ const Navigation = () => {
                   </Link>
                   <Link
                     className="link-btn"
-                    to="/carticle"
+                    to="/createarticle"
                     onClick={() => null}
                   >
                     <Button

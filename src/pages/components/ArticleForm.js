@@ -11,24 +11,34 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
-import UiQuillComponent from './QuillComponent';
-import { postSingleArticle } from '../../helpers/axiosConfig';
-const ArticleForm = (type) => {
-  console.log('child', type);
+import UiQuillComponent from './UI/UiQuillComponent';
+import {
+  postSingleArticle,
+  EditSingleArticle,
+} from '../../helpers/axiosConfig';
+import './ArticleForm.css';
+const ArticleForm = (props) => {
+  const { type, formData } = props;
+  const [dataFromEdit, setDataFromEdit] = useState(formData);
+
   const navigate = useNavigate();
 
   const handlePostSend = (values) => {
+    const { id } = formData;
+
     if (type.id === 2) {
       postSingleArticle(values).then((data) => {
         const { id } = data.data;
         navigate(`/articles/${id}`);
       });
     } else {
-      console.log('dupsa');
+      EditSingleArticle(id, values).then((data) => {
+        navigate(`/articles/${id}`);
+      });
     }
   };
 
@@ -56,12 +66,24 @@ const ArticleForm = (type) => {
     },
     onSubmit: handlePostSend,
   });
+  if (!dataFromEdit) {
+    setDataFromEdit(formik.initialValues);
+  }
   const handleContentChange = useCallback(
     (childData) => {
       formik.setFieldValue('content', childData);
     },
     [formik]
   );
+  useEffect(() => {
+    if (type.id === 1) {
+      formik.setFieldValue('title', dataFromEdit.title);
+      formik.setFieldValue('summary', dataFromEdit.summary);
+      formik.setFieldValue('content', dataFromEdit.content);
+      formik.setFieldValue('publish', !!dataFromEdit.publishedAt);
+    }
+  }, []);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box sx={{ m: 1 }}>
@@ -69,7 +91,7 @@ const ArticleForm = (type) => {
           <AppBar position="static" className="article-nav">
             <Toolbar className="article-toolbar">
               <Typography variant="h6" noWrap component="div">
-                Create your post
+                {type.id === 1 ? ' Edit your post' : 'Create your post'}
               </Typography>
             </Toolbar>
           </AppBar>

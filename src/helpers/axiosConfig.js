@@ -42,3 +42,6 @@ export const postMyArticle = (id) => {
 export const deleteMyArticle = (id) => {
   return instance.delete(`/articles/${id}`);
 };
+export const EditSingleArticle = (id, data) => {
+  return instance.patch(`/articles/${id}`, data);
+};
