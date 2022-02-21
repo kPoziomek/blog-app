@@ -1,6 +1,6 @@
 import React from 'react';
 import ArticleForm from './components/ArticleForm';
-const CArticle = () => {
+const CreateArticle = () => {
   const data = {
     id: 2,
     type: 'create',
@@ -8,4 +8,4 @@ const CArticle = () => {
   return <ArticleForm type={data} />;
 };
 
-export default CArticle;
+export default CreateArticle;
