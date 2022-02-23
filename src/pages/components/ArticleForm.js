@@ -11,35 +11,17 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import UiQuillComponent from './UI/UiQuillComponent';
-import {
-  postSingleArticle,
-  EditSingleArticle,
-} from '../../helpers/axiosConfig';
 import './ArticleForm.css';
-const ArticleForm = (props) => {
-  const { type, formData } = props;
-  const [dataFromEdit, setDataFromEdit] = useState(formData);
+import PublishOutlinedIcon from '@mui/icons-material/PublishOutlined';
+const initialValues = { title: '', summary: '', content: '', publish: false };
 
-  const navigate = useNavigate();
-
+const ArticleForm = ({ title, formData = initialValues, onSubmit }) => {
   const handlePostSend = (values) => {
-    const { id } = formData;
-
-    if (type.id === 2) {
-      postSingleArticle(values).then((data) => {
-        const { id } = data.data;
-        navigate(`/articles/${id}`);
-      });
-    } else {
-      EditSingleArticle(id, values).then((data) => {
-        navigate(`/articles/${id}`);
-      });
-    }
+    onSubmit(values);
   };
 
   const validationSchema = yup.object({
@@ -58,31 +40,16 @@ const ArticleForm = (props) => {
   });
   const formik = useFormik({
     validationSchema,
-    initialValues: {
-      title: '',
-      summary: '',
-      content: '',
-      publish: false,
-    },
+    initialValues: formData,
     onSubmit: handlePostSend,
   });
-  if (!dataFromEdit) {
-    setDataFromEdit(formik.initialValues);
-  }
+
   const handleContentChange = useCallback(
     (childData) => {
       formik.setFieldValue('content', childData);
     },
     [formik]
   );
-  useEffect(() => {
-    if (type.id === 1) {
-      formik.setFieldValue('title', dataFromEdit.title);
-      formik.setFieldValue('summary', dataFromEdit.summary);
-      formik.setFieldValue('content', dataFromEdit.content);
-      formik.setFieldValue('publish', !!dataFromEdit.publishedAt);
-    }
-  }, []);
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -91,7 +58,7 @@ const ArticleForm = (props) => {
           <AppBar position="static" className="article-nav">
             <Toolbar className="article-toolbar">
               <Typography variant="h6" noWrap component="div">
-                {type.id === 1 ? ' Edit your post' : 'Create your post'}
+                {title}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -144,6 +111,7 @@ const ArticleForm = (props) => {
               color="primary"
             >
               Submit Post
+              <PublishOutlinedIcon sx={{ ml: 1 }} />
             </Button>
           </CardActions>
         </Card>

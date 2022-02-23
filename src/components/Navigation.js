@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Button, Box, AppBar, Toolbar } from '@mui/material';
+import { Box, AppBar, Toolbar } from '@mui/material';
+
 import ReactLogo from '../Images/logo512.png';
 import { authMe } from '../helpers/axiosConfig';
 
 import './Navigation.css';
+import NavigationMenu from './NavigationMenu';
 
 const Navigation = () => {
   const [isToken, setIsToken] = useState(false);
@@ -49,55 +51,12 @@ const Navigation = () => {
                 {`Hello ${userName ?? 'Stranger'} `}
               </h3>
             </div>
-            <Box className="nav-box">
-              {isToken && (
-                <>
-                  <Link className="link-btn" to="/">
-                    <Button
-                      className="nav-login-btn"
-                      variant="contained"
-                      color="primary"
-                      sx={{ mx: 2, p: 1.3 }}
-                    >
-                      home
-                    </Button>
-                  </Link>
-                  <Link className="link-btn" to="/myarticles">
-                    <Button
-                      className="nav-login-btn"
-                      variant="contained"
-                      color="primary"
-                      sx={{ mx: 2, p: 1.3 }}
-                    >
-                      My Article
-                    </Button>
-                  </Link>
-                  <Link
-                    className="link-btn"
-                    to="/createarticle"
-                    onClick={() => null}
-                  >
-                    <Button
-                      className="nav-login-btn"
-                      variant="contained"
-                      color="primary"
-                      sx={{ mx: 2, p: 1.3 }}
-                    >
-                      Create Article
-                    </Button>
-                  </Link>
-                </>
-              )}
-              <Button
-                className="nav-login-btn"
-                variant="contained"
-                color="primary"
-                sx={{ mx: 2 }}
-                onClick={handleLogin}
-              >
-                {isToken ? 'logout' : 'login'}
-              </Button>
-            </Box>
+            <NavigationMenu
+              userName={userName}
+              isToken={isToken}
+              loggedIn={loggedIn}
+              handleLogin={handleLogin}
+            />
           </Box>
         </Toolbar>
       </AppBar>

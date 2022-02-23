@@ -9,7 +9,6 @@ import './Article.css';
 const Article = () => {
   let { id } = useParams();
   const [articleData, setArticleData] = useState();
-
   useEffect(() => {
     getSingleArticle(id).then(({ data }) => {
       setArticleData(data);

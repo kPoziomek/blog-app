@@ -16,9 +16,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="login" element={<Login />} />
-        <Route path="createarticle" element={<CreateArticle />} />
-        <Route path="myarticles" exact element={<MyArticles />} />
-        <Route path="editedarticle" exact element={<MyEditedArticle />} />
+        <Route path="articles/create" element={<CreateArticle />} />
+        <Route path="articles/my" exact element={<MyArticles />} />
+        <Route path="articles/edit/:id" exact element={<MyEditedArticle />} />
 
         <Route path="/articles/:id" element={<Article />} />
       </Routes>

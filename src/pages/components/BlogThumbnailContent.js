@@ -1,24 +1,41 @@
 import React from 'react';
 import ReactLogo from '../../Images/logo512.png';
-import { Card, Typography, CardMedia, CardContent } from '@mui/material';
+import {
+  Card,
+  Typography,
+  CardMedia,
+  CardContent,
+  CardActions,
+} from '@mui/material';
 import './BlogThumbnailContent.css';
 
-const BlogThumbnailContent = ({ arr }) => {
-  const { title, summary, author } = arr;
+const BlogThumbnailContent = ({ singleArticle, actionButtons }) => {
+  const { title, summary, authorFirstName, authorLastName, image } =
+    singleArticle;
+
   return (
     <Card className="thumbnail-main" sx={{ maxWidth: 345 }}>
-      <Typography gutterBottom variant="h5" component="div">
-        {title}
+      <Typography gutterBottom variant="h6" component="div">
+        Title: {title}
       </Typography>
-      <CardMedia component="img" image={ReactLogo} alt="react blog" />
+      <>
+        {image && (
+          <CardMedia component="img" image={ReactLogo} alt="react blog" />
+        )}
+      </>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="subtitle2" component="div">
           {summary}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {`${author.firstName} ${author.lastName}`}
-        </Typography>
+        <>
+          {authorFirstName && (
+            <Typography variant="body2" color="text.secondary">
+              {`${authorFirstName} ${authorLastName}`}
+            </Typography>
+          )}
+        </>
       </CardContent>
+      <CardActions>{actionButtons}</CardActions>
     </Card>
   );
 };

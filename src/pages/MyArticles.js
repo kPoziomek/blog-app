@@ -1,31 +1,35 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Typography,
-} from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { getMyArticles } from '../helpers/axiosConfig';
+import BlogThumbnailContent from '../pages/components/BlogThumbnailContent';
 import './MyArticles.css';
-import { useNavigate } from 'react-router-dom';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import { Link } from 'react-router-dom';
+
 import { deleteMyArticle, postMyArticle } from '../helpers/axiosConfig';
 
 const MyArticles = () => {
-  const [myArticles, setMyArticles] = useState();
-  const navigate = useNavigate();
+  const [myArticles, setMyArticles] = useState([]);
 
   useEffect(() => {
     getMyArticles().then((response) => {
-      let myArrOfArticles = response.data;
-      setMyArticles(myArrOfArticles);
+      let articlesData = response.data;
+      const normalizedArticles = articlesData.map((singleElement) => {
+        const { id, title, summary, content, publishedAt } = singleElement;
+        return {
+          id,
+          title,
+          summary,
+          content,
+          publishedAt,
+        };
+      });
+      setMyArticles(normalizedArticles);
     });
   }, []);
 
-  const editPost = (value) => {
-    navigate('/editedarticle', { state: value });
-  };
   const postPost = (id) => {
     postMyArticle(id).then((res) => {
       if (res.status === 200) {
@@ -41,72 +45,64 @@ const MyArticles = () => {
   const deletePost = (id) => {
     deleteMyArticle(id).then((response) => {
       if (response.status === 200) {
-        const filteredArticle = myArticles.filter((article) => {
-          return article.id !== id;
+        setMyArticles((prev) => {
+          return prev.filter((article) => {
+            return article.id !== id;
+          });
         });
-        setMyArticles(filteredArticle);
       }
     });
   };
-
+  if (myArticles.length === 0) {
+    return (
+      <div className="empty-array">
+        <h2>You have not created any articles yet</h2>
+      </div>
+    );
+  }
   return (
     <div>
       <Box className="my-article">
-        {myArticles &&
-          myArticles.map((arr) => {
-            return (
-              <Card sx={{ maxWidth: 400, my: 1 }} key={arr.id}>
-                <CardContent>
-                  <Typography
-                    sx={{ fontSize: 14 }}
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    {arr.title}
-                  </Typography>
-
-                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    {arr.summary}
-                  </Typography>
-                  <hr />
-                  <Typography variant="body2">
-                    publishedAt:
-                    {arr.publishedAt
-                      ? ` ${arr.publishedAt.slice(0, 10)}`
-                      : 'not published'}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
+        {myArticles.map((singleArticle) => {
+          return (
+            <BlogThumbnailContent
+              key={singleArticle.id}
+              singleArticle={singleArticle}
+              actionButtons={
+                <>
+                  <IconButton
+                    component={Link}
+                    to={`/articles/edit/${singleArticle.id}`}
                     size="small"
                     variant="contained"
                     color="primary"
-                    onClick={() => editPost(arr)}
                   >
-                    edit
-                  </Button>
-                  {!arr.publishedAt && (
-                    <Button
+                    <EditOutlinedIcon fontSize="medium" />
+                  </IconButton>
+
+                  <IconButton
+                    size="small"
+                    variant="contained"
+                    color="primary"
+                    onClick={() => deletePost(singleArticle.id)}
+                  >
+                    <DeleteForeverOutlinedIcon fontSize="medium" />
+                  </IconButton>
+                  {!singleArticle.publishedAt && (
+                    <IconButton
                       size="small"
                       variant="contained"
                       color="primary"
-                      onClick={() => postPost(arr.id)}
+                      onClick={() => postPost(singleArticle.id)}
                     >
-                      post
-                    </Button>
+                      <PostAddOutlinedIcon fontSize="medium" />
+                    </IconButton>
                   )}
-                  <Button
-                    size="small"
-                    variant="contained"
-                    color="primary"
-                    onClick={() => deletePost(arr.id)}
-                  >
-                    delete
-                  </Button>
-                </CardActions>
-              </Card>
-            );
-          })}
+                </>
+              }
+            ></BlogThumbnailContent>
+          );
+        })}
       </Box>
     </div>
   );
