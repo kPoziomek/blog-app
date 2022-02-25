@@ -1,9 +1,9 @@
 import ReactQuill from 'react-quill';
 import classNames from 'classnames';
-import './QuillComponent.css';
+import './UiQuillComponent.css';
 import 'react-quill/dist/quill.snow.css';
 
-const QuillComponent = ({ onChange, value, error }) => {
+const UiQuillComponent = ({ onChange, value, error }) => {
   const isError = !!error;
   let errorClass = classNames({
     error: isError,
@@ -23,4 +23,4 @@ const QuillComponent = ({ onChange, value, error }) => {
   );
 };
 
-export default QuillComponent;
+export default UiQuillComponent;

@@ -15,18 +15,3 @@
 .article-elements {
   margin: 10px 0 !important;
 }
-
-.ql-container {
-  min-height: 10rem;
-  height: 100%;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.ql-editor {
-  height: 100%;
-  flex: 1;
-  overflow-y: auto;
-  width: 100%;
-}

@@ -6,29 +6,52 @@ import { Box, Card } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-  let [data, setData] = useState();
+  let [allArticles, setAllArticles] = useState([]);
   useEffect(() => {
     getArticles().then((res) => {
-      let myData = res.data;
-      setData(myData);
+      let articlesData = res.data;
+      const normalizedArticles = articlesData.map((singleElement) => {
+        const { id, title, summary, content, author } = singleElement;
+        return {
+          id,
+          title,
+          summary,
+          content,
+          authorFirstName: author.firstName,
+          authorLastName: author.lastName,
+          image: true,
+        };
+      });
+      setAllArticles(normalizedArticles);
     });
   }, []);
 
+  if (allArticles.length === 0) {
+    return (
+      <div className="empty-array">
+        <h2>We don't have any posted articles yet</h2>
+      </div>
+    );
+  }
   return (
     <>
       <Box>
         <Card>
           <div className="main-container">
-            {data &&
-              data.map((arr, index) => (
+            {allArticles.map((singleArticle) => {
+              return (
                 <Link
                   className="main-articles"
-                  to={'/articles/' + arr.id}
-                  key={index}
+                  to={'/articles/' + singleArticle.id}
+                  key={singleArticle.id}
                 >
-                  <BlogThumbnailContent arr={arr} key={index} />
+                  <BlogThumbnailContent
+                    singleArticle={singleArticle}
+                    key={singleArticle.id}
+                  />
                 </Link>
-              ))}
+              );
+            })}
           </div>
 
           <footer className="footer-container"></footer>

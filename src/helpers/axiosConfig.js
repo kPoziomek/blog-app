@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const instance = axios.create({
-  baseURL: 'http://localhost:4000',
+  baseURL: 'http://localhost:4000/api',
 });
 
 instance.interceptors.request.use(
@@ -31,4 +31,17 @@ export const getSingleArticle = (id) => {
 };
 export const postSingleArticle = (data) => {
   return instance.post('/articles', data);
+};
+export const getMyArticles = () => {
+  return instance.get(`/articles/my`);
+};
+export const postMyArticle = (id) => {
+  return instance.patch(`/articles/${id}/publish`);
+};
+
+export const deleteMyArticle = (id) => {
+  return instance.delete(`/articles/${id}`);
+};
+export const editSingleArticle = (id, data) => {
+  return instance.patch(`/articles/${id}`, data);
 };

@@ -1,0 +1,11 @@
+.my-article {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 15px;
+  margin: 25px;
+  justify-content: center;
+}
+.empty-array {
+  text-align: center;
+}
