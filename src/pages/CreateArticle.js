@@ -1,14 +1,13 @@
 import React from 'react';
 import ArticleForm from './components/ArticleForm';
 import { useNavigate } from 'react-router-dom';
-import { postSingleArticle } from '../helpers/axiosConfig';
+import { useArticleContext } from '../ArticleDataContext';
 const CreateArticle = () => {
+  const { createMyArticle } = useArticleContext();
   const navigate = useNavigate();
+
   const handleSubmit = (values) => {
-    postSingleArticle(values).then((data) => {
-      const { id } = data.data;
-      navigate(`/articles/${id}`);
-    });
+    createMyArticle(values, { onSuccess: (id) => navigate(`/articles/${id}`) });
   };
   return <ArticleForm title="Create Article" onSubmit={handleSubmit} />;
 };

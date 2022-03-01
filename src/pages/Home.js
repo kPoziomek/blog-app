@@ -1,30 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './Home.css';
 import BlogThumbnailContent from './components/BlogThumbnailContent';
-import { getArticles } from '../helpers/axiosConfig';
 import { Box, Card } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useArticleContext } from '../ArticleDataContext';
 
 const Home = () => {
-  let [allArticles, setAllArticles] = useState([]);
+  const { allArticles, getAllArticles } = useArticleContext();
   useEffect(() => {
-    getArticles().then((res) => {
-      let articlesData = res.data;
-      const normalizedArticles = articlesData.map((singleElement) => {
-        const { id, title, summary, content, author } = singleElement;
-        return {
-          id,
-          title,
-          summary,
-          content,
-          authorFirstName: author.firstName,
-          authorLastName: author.lastName,
-          image: true,
-        };
-      });
-      setAllArticles(normalizedArticles);
-    });
-  }, []);
+    getAllArticles();
+  }, [getAllArticles]);
 
   if (allArticles.length === 0) {
     return (
