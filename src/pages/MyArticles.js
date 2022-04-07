@@ -1,69 +1,48 @@
-import { Box, IconButton } from '@mui/material';
+import { Box, IconButton, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { getMyArticles } from '../helpers/axiosConfig';
+
 import BlogThumbnailContent from '../pages/components/BlogThumbnailContent';
 import './MyArticles.css';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { Link } from 'react-router-dom';
+import {
+  getMyArticlesRedux,
+  deleteMyArticleRedux,
+  postMyArticleRedux,
+} from '../features/articleSlice';
 
-import { deleteMyArticle, postMyArticle } from '../helpers/axiosConfig';
+import { useDispatch, useSelector } from 'react-redux';
 
 const MyArticles = () => {
-  const [myArticles, setMyArticles] = useState([]);
+  const dispatch = useDispatch();
+  const { myArticlesState, loadingMyArticle } = useSelector(
+    (state) => state.articles
+  );
 
   useEffect(() => {
-    getMyArticles().then((response) => {
-      let articlesData = response.data;
-      const normalizedArticles = articlesData.map((singleElement) => {
-        const { id, title, summary, content, publishedAt } = singleElement;
-        return {
-          id,
-          title,
-          summary,
-          content,
-          publishedAt,
-        };
-      });
-      setMyArticles(normalizedArticles);
-    });
-  }, []);
+    dispatch(getMyArticlesRedux());
+  }, [dispatch, myArticlesState]);
 
   const postPost = (id) => {
-    postMyArticle(id).then((res) => {
-      if (res.status === 200) {
-        const updatedArticle = res.data;
-        setMyArticles((prev) => {
-          return prev.map((element) => {
-            return element.id === updatedArticle.id ? updatedArticle : element;
-          });
-        });
-      }
-    });
+    dispatch(postMyArticleRedux(id));
   };
   const deletePost = (id) => {
-    deleteMyArticle(id).then((response) => {
-      if (response.status === 200) {
-        setMyArticles((prev) => {
-          return prev.filter((article) => {
-            return article.id !== id;
-          });
-        });
-      }
-    });
+    dispatch(deleteMyArticleRedux(id));
   };
-  if (myArticles.length === 0) {
+  if (myArticlesState?.length === 0) {
     return (
       <div className="empty-array">
         <h2>You have not created any articles yet</h2>
+        {loadingMyArticle && <CircularProgress />}
       </div>
     );
   }
   return (
     <div>
       <Box className="my-article">
-        {myArticles.map((singleArticle) => {
+        {myArticlesState.map((singleArticle) => {
           return (
             <BlogThumbnailContent
               key={singleArticle.id}

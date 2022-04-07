@@ -1,35 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ArticleForm from './components/ArticleForm';
-import { getSingleArticle, editSingleArticle } from '../helpers/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import { Box, CircularProgress } from '@mui/material';
+
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getSingleArticleRedux,
+  editSingleArticleRedux,
+} from '../features/articleSlice';
+
 const MyEditedArticle = () => {
-  const [singleArticleData, setSingleArticleData] = useState(null);
+  const dispatch = useDispatch();
+  const {
+    singleArticle,
+    loadingSingleArticle,
+    editedArticle,
+    loadingEditedArticle,
+  } = useSelector((state) => state.articles);
+
   const { id } = useParams();
-  const navigate = useNavigate();
+
   useEffect(() => {
-    getSingleArticle(id).then(({ data }) => setSingleArticleData(data));
+    dispatch(getSingleArticleRedux(id));
   }, [id]);
 
   const handleSubmit = (values) => {
-    editSingleArticle(id, values).then((data) => {
-      const { id } = data.data;
-      navigate(`/articles/${id}`);
-    });
+    dispatch(editSingleArticleRedux({ id, values }));
   };
 
-  if (singleArticleData === null) {
+  if (loadingSingleArticle) {
     return (
-      <>
+      <Box sx={{ p: 1, m: 1, display: 'flex', justifyContent: 'center' }}>
         <p>Loading...</p>
-      </>
+        <CircularProgress />
+      </Box>
     );
   }
   const defaultData = {
-    title: singleArticleData.title,
-    summary: singleArticleData.summary,
-    content: singleArticleData.content,
-    publish: !!singleArticleData.publishedAt,
+    title: singleArticle.title,
+    summary: singleArticle.summary,
+    content: singleArticle.content,
+    publish: !!singleArticle.publishedAt,
   };
   return (
     <ArticleForm
