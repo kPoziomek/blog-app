@@ -1,35 +1,39 @@
-import { Avatar, Card, CardHeader } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { getSingleArticle } from '../helpers/axiosConfig';
+import { Avatar, Box, Card, CardHeader, CircularProgress } from '@mui/material';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { useParams } from 'react-router';
 import './Article.css';
+import useArticle from '../hooks/useArticle';
 
 const Article = () => {
-  let { id } = useParams();
-  const [articleData, setArticleData] = useState();
-  useEffect(() => {
-    getSingleArticle(id).then(({ data }) => {
-      setArticleData(data);
-    });
-  }, [id]);
+  const { id } = useParams();
 
+  const { isLoading, data } = useArticle(id);
+
+  if (isLoading) {
+    return (
+      <Box className="empty-array">
+        <h2>Loading....</h2>
+        <CircularProgress />
+      </Box>
+    );
+  }
   return (
     <div className="mainArticle">
       <header className="article-header">
         <Avatar
+          as={Link}
           className="mainAvatar"
           sx={{ bgcolor: '#2196f3' }}
           aria-label="recipe"
+          to="/"
         >
-          <Link to="/">
-            <HomeIcon sx={{ color: '#fff' }} />
-          </Link>
+          <HomeIcon sx={{ color: '#fff' }} />
         </Avatar>
       </header>
 
-      {articleData && (
+      {data && (
         <Card
           className="mainContainer"
           sx={{ mx: 'auto', p: 2, border: '1px dashed grey' }}
@@ -37,14 +41,18 @@ const Article = () => {
           <CardHeader
             sx={{ maxWidth: 245 }}
             avatar={<Avatar />}
-            title={`${articleData.author.firstName} ${articleData.author.lastName}`}
-            subheader="02/02/2022"
+            title={
+              data.authorFullName
+                ? data.authorFullName
+                : `${data.author.firstName} ${data.author.firstName}`
+            }
+            subheader={new Date(data.publishedAt).toLocaleDateString()}
           />
 
           <section>
-            <h3>{articleData.title}</h3>
+            <h3>{data.title}</h3>
             <img src="" alt="" />
-            <div dangerouslySetInnerHTML={{ __html: articleData.content }} />
+            <div dangerouslySetInnerHTML={{ __html: data.content }} />
           </section>
         </Card>
       )}

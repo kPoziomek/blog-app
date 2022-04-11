@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Box,
   Tooltip,
@@ -13,7 +13,9 @@ import ReactLogo from '../Images/logo512.png';
 import { Link } from 'react-router-dom';
 import Logout from '@mui/icons-material/Logout';
 import { DataNavigation } from '../helpers/NavigationData';
-const NavigationMenu = ({ isToken, handleLogin }) => {
+import { AuthorizationContext } from '../context/AuthorizationContext';
+const NavigationMenu = ({ handleLogin }) => {
+  const { userName } = useContext(AuthorizationContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = !!anchorEl;
   const handleClick = (e) => {
@@ -73,7 +75,7 @@ const NavigationMenu = ({ isToken, handleLogin }) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        {isToken &&
+        {userName &&
           DataNavigation.map((el) => {
             return (
               <MenuItem key={el.id} component={Link} to={el.to}>
@@ -86,7 +88,7 @@ const NavigationMenu = ({ isToken, handleLogin }) => {
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          {isToken ? 'logout' : 'login'}
+          {userName ? 'logout' : 'login'}
         </MenuItem>
       </Menu>
     </>

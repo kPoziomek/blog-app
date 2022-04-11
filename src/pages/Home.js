@@ -1,57 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './Home.css';
 import BlogThumbnailContent from './components/BlogThumbnailContent';
-import { getArticles } from '../helpers/axiosConfig';
-import { Box, Card } from '@mui/material';
+import useArticleHook from '../hooks/useArticles';
+import { Box, Card, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-  let [allArticles, setAllArticles] = useState([]);
-  useEffect(() => {
-    getArticles().then((res) => {
-      let articlesData = res.data;
-      const normalizedArticles = articlesData.map((singleElement) => {
-        const { id, title, summary, content, author } = singleElement;
-        return {
-          id,
-          title,
-          summary,
-          content,
-          authorFirstName: author.firstName,
-          authorLastName: author.lastName,
-          image: true,
-        };
-      });
-      setAllArticles(normalizedArticles);
-    });
-  }, []);
+  const { status, data, isLoading } = useArticleHook();
 
-  if (allArticles.length === 0) {
+  if (isLoading) {
     return (
       <div className="empty-array">
         <h2>We don't have any posted articles yet</h2>
+        <CircularProgress />
       </div>
     );
   }
+
   return (
     <>
       <Box>
         <Card>
           <div className="main-container">
-            {allArticles.map((singleArticle) => {
-              return (
-                <Link
-                  className="main-articles"
-                  to={'/articles/' + singleArticle.id}
-                  key={singleArticle.id}
-                >
-                  <BlogThumbnailContent
-                    singleArticle={singleArticle}
+            {status === 'success' &&
+              data.map((singleArticle) => {
+                return (
+                  <Link
+                    className="main-articles"
+                    to={`/articles/${singleArticle.id}`}
                     key={singleArticle.id}
-                  />
-                </Link>
-              );
-            })}
+                  >
+                    <BlogThumbnailContent
+                      singleArticle={singleArticle}
+                      image={(singleArticle.image = true)}
+                      key={singleArticle.id}
+                    />
+                  </Link>
+                );
+              })}
           </div>
 
           <footer className="footer-container"></footer>

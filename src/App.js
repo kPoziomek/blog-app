@@ -8,21 +8,33 @@ import Navigation from './components/Navigation';
 import CreateArticle from './pages/CreateArticle';
 import MyArticles from './pages/MyArticles';
 import MyEditedArticle from './pages/MyEditedArticle';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorHandler } from './helpers/ErrorComponent';
+import { AuthorizationProvider } from './context/AuthorizationContext';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 function App() {
   return (
-    <div className="App">
-      <Navigation />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="login" element={<Login />} />
-        <Route path="articles/create" element={<CreateArticle />} />
-        <Route path="articles/my" exact element={<MyArticles />} />
-        <Route path="articles/edit/:id" exact element={<MyEditedArticle />} />
-
-        <Route path="/articles/:id" element={<Article />} />
-      </Routes>
-    </div>
+    <AuthorizationProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <ErrorBoundary FallbackComponent={ErrorHandler}>
+        <div className="App">
+          <Navigation />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="articles/create" element={<CreateArticle />} />
+            <Route path="articles/my" exact element={<MyArticles />} />
+            <Route
+              path="articles/edit/:id"
+              exact
+              element={<MyEditedArticle />}
+            />
+            <Route path="/articles/:id" element={<Article />} />
+          </Routes>
+        </div>
+      </ErrorBoundary>
+    </AuthorizationProvider>
   );
 }
 

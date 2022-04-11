@@ -1,6 +1,6 @@
-import { Box, IconButton } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { getMyArticles } from '../helpers/axiosConfig';
+import { Box, IconButton, CircularProgress } from '@mui/material';
+import React from 'react';
+
 import BlogThumbnailContent from '../pages/components/BlogThumbnailContent';
 import './MyArticles.css';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -8,62 +8,55 @@ import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { Link } from 'react-router-dom';
 
-import { deleteMyArticle, postMyArticle } from '../helpers/axiosConfig';
+import useMyArticles from '../hooks/useMyArticles';
+import { useMutation, useQueryClient } from 'react-query';
+
+import { useDeleteArticle } from '../hooks/useDeleteArticle';
+import { usePostArticle } from '../hooks/usePostArticle';
 
 const MyArticles = () => {
-  const [myArticles, setMyArticles] = useState([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    getMyArticles().then((response) => {
-      let articlesData = response.data;
-      const normalizedArticles = articlesData.map((singleElement) => {
-        const { id, title, summary, content, publishedAt } = singleElement;
-        return {
-          id,
-          title,
-          summary,
-          content,
-          publishedAt,
-        };
-      });
-      setMyArticles(normalizedArticles);
-    });
-  }, []);
+  const { isFetching, status, data } = useMyArticles();
+  const { mutate: delMutate } = useDeleteArticle();
+  const { mutate: postMutate } = usePostArticle();
 
   const postPost = (id) => {
-    postMyArticle(id).then((res) => {
-      if (res.status === 200) {
-        const updatedArticle = res.data;
-        setMyArticles((prev) => {
-          return prev.map((element) => {
-            return element.id === updatedArticle.id ? updatedArticle : element;
-          });
-        });
-      }
+    postMutate(id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('myArticles');
+      },
     });
   };
   const deletePost = (id) => {
-    deleteMyArticle(id).then((response) => {
-      if (response.status === 200) {
-        setMyArticles((prev) => {
-          return prev.filter((article) => {
-            return article.id !== id;
-          });
-        });
-      }
+    delMutate(id, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('myArticles');
+      },
     });
   };
-  if (myArticles.length === 0) {
+
+  if (isFetching) {
+    return (
+      <Box className="empty-array">
+        <h2>We are loading articles</h2>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  if (status === 'error') return <p>Error :(</p>;
+
+  if (data.length === 0) {
     return (
       <div className="empty-array">
-        <h2>You have not created any articles yet</h2>
+        <h2>You don't have posted Articles</h2>
       </div>
     );
   }
   return (
     <div>
       <Box className="my-article">
-        {myArticles.map((singleArticle) => {
+        {data.map((singleArticle) => {
           return (
             <BlogThumbnailContent
               key={singleArticle.id}
