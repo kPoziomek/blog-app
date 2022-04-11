@@ -9,7 +9,7 @@ import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined
 import { Link } from 'react-router-dom';
 
 import useMyArticles from '../hooks/useMyArticles';
-import { useMutation, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 import { useDeleteArticle } from '../hooks/useDeleteArticle';
 import { usePostArticle } from '../hooks/usePostArticle';

@@ -6,7 +6,7 @@ import { Box, Card, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-  const { status, data, isLoading } = useArticleHook();
+  const { data, isLoading } = useArticleHook();
 
   if (isLoading) {
     return (
@@ -22,22 +22,21 @@ const Home = () => {
       <Box>
         <Card>
           <div className="main-container">
-            {status === 'success' &&
-              data.map((singleArticle) => {
-                return (
-                  <Link
-                    className="main-articles"
-                    to={`/articles/${singleArticle.id}`}
+            {data.map((singleArticle) => {
+              return (
+                <Link
+                  className="main-articles"
+                  to={`/articles/${singleArticle.id}`}
+                  key={singleArticle.id}
+                >
+                  <BlogThumbnailContent
+                    singleArticle={singleArticle}
+                    image={(singleArticle.image = true)}
                     key={singleArticle.id}
-                  >
-                    <BlogThumbnailContent
-                      singleArticle={singleArticle}
-                      image={(singleArticle.image = true)}
-                      key={singleArticle.id}
-                    />
-                  </Link>
-                );
-              })}
+                  />
+                </Link>
+              );
+            })}
           </div>
 
           <footer className="footer-container"></footer>

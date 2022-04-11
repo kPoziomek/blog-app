@@ -6,6 +6,7 @@ import ArticleForm from './components/ArticleForm';
 import { editSingleArticle } from '../helpers/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
+import { usePostSingleArticle } from '../hooks/usePostSingleArticle';
 import useArticle from '../hooks/useArticle';
 const MyEditedArticle = () => {
   const { id } = useParams();
@@ -13,22 +14,17 @@ const MyEditedArticle = () => {
 
   const { isLoading, data } = useArticle(id);
 
-  const editMutation = useMutation(
-    id,
-    (editedData) => {
-      return editSingleArticle(id, editedData).then((data) => {
-        return data.data;
-      });
-    },
-    {
-      onSuccess: (data) => {
-        navigate(`/articles/${data.id}`);
-      },
-    }
-  );
+  const { mutate: editMutation } = usePostSingleArticle();
 
   const handleSubmit = (values) => {
-    editMutation.mutate(values);
+    editMutation(
+      { id, values },
+      {
+        onSuccess: () => {
+          navigate(`/articles/${data.id}`);
+        },
+      }
+    );
   };
 
   if (isLoading) {
