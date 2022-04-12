@@ -1,5 +1,5 @@
 import { Box, IconButton, CircularProgress } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import BlogThumbnailContent from '../pages/components/BlogThumbnailContent';
 import './MyArticles.css';
@@ -12,18 +12,20 @@ import {
   deleteMyArticleRedux,
   postMyArticleRedux,
 } from '../features/articleSlice';
-
+import {
+  getMyArticles,
+  loadingMyArticleSelector,
+} from '../features/selectors.js';
 import { useDispatch, useSelector } from 'react-redux';
 
 const MyArticles = () => {
   const dispatch = useDispatch();
-  const { myArticlesState, loadingMyArticle } = useSelector(
-    (state) => state.articles
-  );
-
   useEffect(() => {
     dispatch(getMyArticlesRedux());
-  }, [dispatch, myArticlesState]);
+  }, [dispatch]);
+
+  const myArticles = useSelector(getMyArticles);
+  const loadingMyArticles = useSelector(loadingMyArticleSelector);
 
   const postPost = (id) => {
     dispatch(postMyArticleRedux(id));
@@ -31,18 +33,23 @@ const MyArticles = () => {
   const deletePost = (id) => {
     dispatch(deleteMyArticleRedux(id));
   };
-  if (myArticlesState?.length === 0) {
+
+  if (loadingMyArticles) {
+    return <CircularProgress />;
+  }
+
+  if (myArticles.length === 0) {
     return (
       <div className="empty-array">
         <h2>You have not created any articles yet</h2>
-        {loadingMyArticle && <CircularProgress />}
       </div>
     );
   }
+
   return (
     <div>
       <Box className="my-article">
-        {myArticlesState.map((singleArticle) => {
+        {myArticles.map((singleArticle) => {
           return (
             <BlogThumbnailContent
               key={singleArticle.id}

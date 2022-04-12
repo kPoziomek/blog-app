@@ -6,23 +6,29 @@ import { Box, Card, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllArticlesRedux } from '../features/articleSlice';
+import { getArticles, loadingArticlesSelector } from '../features/selectors';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { articles, loadingArticles } = useSelector((state) => state.articles);
+  const articles = useSelector(getArticles);
+  const loadingArticles = useSelector(loadingArticlesSelector);
 
   useEffect(() => {
     dispatch(getAllArticlesRedux());
   }, [dispatch]);
 
-  if (articles.length === 0) {
+  if (loadingArticles) {
+    return <CircularProgress />;
+  }
+
+  if (!articles.length) {
     return (
       <div className="empty-array">
         <h2>We don't have any posted articles yet</h2>
-        {loadingArticles && <CircularProgress />}
       </div>
     );
   }
+
   return (
     <>
       <Box>

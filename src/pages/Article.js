@@ -1,34 +1,39 @@
 import { Avatar, Card, CardHeader, CircularProgress } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { isEmpty } from 'lodash';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getSingleArticle } from '../helpers/axiosConfig';
+import dompurify from 'dompurify';
 import HomeIcon from '@mui/icons-material/Home';
 import { getSingleArticleRedux } from '../features/articleSlice';
 import './Article.css';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  getArticle,
+  loadingSingleArticleSelector,
+} from '../features/selectors';
 
 const Article = () => {
-  let { id } = useParams();
   const dispatch = useDispatch();
-  const { singleArticle, loadingSingleArticle } = useSelector(
-    (state) => state.articles
-  );
-  const [articleData, setArticleData] = useState();
+  const { author, title, content } = useSelector(getArticle);
+  const loadingSingleArticle = useSelector(loadingSingleArticleSelector);
+  let { id } = useParams();
+  const sanitizer = dompurify.sanitize;
   useEffect(() => {
     dispatch(getSingleArticleRedux(id));
-    getSingleArticle(id).then(({ data }) => {
-      setArticleData(data);
-    });
-  }, [id]);
+  }, [dispatch, id]);
 
-  if (typeof articleData !== 'object') {
+  if (loadingSingleArticle) {
+    return <CircularProgress />;
+  }
+
+  if (isEmpty(author)) {
     return (
       <div className="empty-array">
         <h2>We are looking for article </h2>
-        {loadingSingleArticle && <CircularProgress />}
       </div>
     );
   }
+
   return (
     <div className="mainArticle">
       <header className="article-header">
@@ -43,7 +48,7 @@ const Article = () => {
         </Avatar>
       </header>
 
-      {singleArticle && (
+      {
         <Card
           className="mainContainer"
           sx={{ mx: 'auto', p: 2, border: '1px dashed grey' }}
@@ -51,17 +56,17 @@ const Article = () => {
           <CardHeader
             sx={{ maxWidth: 245 }}
             avatar={<Avatar />}
-            title={`${singleArticle.author.firstName} ${singleArticle.author.lastName}`}
+            title={`${author.firstName} ${author.lastName}`}
             subheader="02/02/2022"
           />
 
           <section>
-            <h3>{singleArticle.title}</h3>
+            <h3>{title}</h3>
             <img src="" alt="" />
-            <div dangerouslySetInnerHTML={{ __html: singleArticle.content }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizer(content) }} />
           </section>
         </Card>
-      )}
+      }
     </div>
   );
 };

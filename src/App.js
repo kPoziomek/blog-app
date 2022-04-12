@@ -20,7 +20,7 @@ function App() {
         <Route path="articles/my" exact element={<MyArticles />} />
         <Route path="articles/edit/:id" exact element={<MyEditedArticle />} />
 
-        <Route path="/articles/:id" element={<Article />} />
+        <Route path="/articles/:id" exact element={<Article />} />
       </Routes>
     </div>
   );

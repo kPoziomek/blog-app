@@ -10,33 +10,23 @@ import {
 
 const initialState = {
   articles: [],
-  myArticlesState: [],
-  singleArticle: [],
-  editedArticle: [],
+  myArticles: [],
+  article: {},
 
   loadingArticles: false,
   loadingMyArticle: false,
+  isEdited: false,
   loadingSingleArticle: false,
-  loadingEditedArticle: false,
+  loadingDeletedArticle: false,
+  loadingPostArticle: false,
 };
+
+/// actions
 export const getAllArticlesRedux = createAsyncThunk(
   'articles/getArticles',
-  async (thunkAPI) => {
+  async () => {
     const res = await getArticles();
-
-    const normalizedArticles = res.data.map((singleElement) => {
-      const { id, title, summary, content, author } = singleElement;
-      return {
-        id,
-        title,
-        summary,
-        content,
-        authorFirstName: author.firstName,
-        authorLastName: author.lastName,
-        image: true,
-      };
-    });
-    return normalizedArticles;
+    return res.data;
   }
 );
 
@@ -45,50 +35,31 @@ export const getMyArticlesRedux = createAsyncThunk(
 
   async () => {
     const res = await getMyArticles();
-
-    let articlesData = res.data;
-    const normalizedArticles = articlesData.map((singleElement) => {
-      const { id, title, summary, content, publishedAt } = singleElement;
-      return {
-        id,
-        title,
-        summary,
-        content,
-        publishedAt,
-      };
-    });
-
-    return normalizedArticles;
+    return res.data;
   }
 );
 export const getSingleArticleRedux = createAsyncThunk(
   'articles/getSingleArticle',
   async (id) => {
     const res = await getSingleArticle(id);
-    let dataArticle = res.data;
-    return dataArticle;
+    return res.data;
   }
 );
 export const editSingleArticleRedux = createAsyncThunk(
   'articles/editSingleArticle',
-  async (data) => {
-    const { id, values } = data;
+  async ({ id, values }) => {
     const res = await editSingleArticle(id, values);
-
-    let editedArticle = res.data;
-    return editedArticle;
+    return res.data;
   }
 );
 
 export const deleteMyArticleRedux = createAsyncThunk(
   'articles/deleteMyArticle',
+
   async (id) => {
     const res = await deleteMyArticle(id);
-    if (res.status === 200) {
-      return initialState.myArticlesState.filter((article) => {
-        return article.id !== id;
-      });
-    }
+
+    return res.data;
   }
 );
 
@@ -96,15 +67,10 @@ export const postMyArticleRedux = createAsyncThunk(
   'articles/postMyArticle',
   async (id) => {
     const res = await postMyArticle(id);
-    if (res.status === 200) {
-      const updatedArticle = res.data;
-      return initialState.myArticlesState.map((element) => {
-        return element.id === updatedArticle.id ? updatedArticle : element;
-      });
-    }
+    return res.data;
   }
 );
-
+// index lub slice
 export const articleSlice = createSlice({
   name: 'articles',
   initialState,
@@ -127,7 +93,7 @@ export const articleSlice = createSlice({
     },
     [getMyArticlesRedux.fulfilled]: (state, { payload }) => {
       state.loadingMyArticle = false;
-      state.myArticlesState = payload;
+      state.myArticles = payload;
     },
     [getMyArticlesRedux.rejected]: (state) => {
       state.loadingMyArticle = false;
@@ -138,7 +104,7 @@ export const articleSlice = createSlice({
     },
     [getSingleArticleRedux.fulfilled]: (state, { payload }) => {
       state.loadingSingleArticle = false;
-      state.singleArticle = payload;
+      state.article = payload;
     },
     [getSingleArticleRedux.rejected]: (state) => {
       state.loadingSingleArticle = false;
@@ -146,13 +112,43 @@ export const articleSlice = createSlice({
     //editArticle
     [editSingleArticleRedux.pending]: (state) => {
       state.loadingEditedArticle = true;
+      state.isEdited = false;
     },
     [editSingleArticleRedux.fulfilled]: (state, { payload }) => {
       state.loadingEditedArticle = false;
       state.editedArticle = payload;
+      state.isEdited = true;
     },
     [editSingleArticleRedux.rejected]: (state) => {
       state.loadingEditedArticle = false;
+      state.isEdited = false;
+    },
+    //deleteMyArticleRedux
+    [deleteMyArticleRedux.pending]: (state) => {
+      state.loadingDeletedArticle = true;
+    },
+    [deleteMyArticleRedux.fulfilled]: (state, { payload }) => {
+      state.loadingDeletedArticle = false;
+      /// helpers można zrobić
+
+      state.myArticles = state.myArticles.filter((article) => {
+        return article.createdAt !== payload.createdAt;
+      });
+    },
+    [deleteMyArticleRedux.rejected]: (state) => {
+      state.loadingDeletedArticle = false;
+    },
+    [postMyArticleRedux.pending]: (state) => {
+      state.loadingPostArticle = true;
+    },
+    [postMyArticleRedux.fulfilled]: (state, { payload }) => {
+      state.article = payload;
+      state.myArticles = state.myArticles.map((element) => {
+        return element.id === payload.id ? payload : element;
+      });
+    },
+    [postMyArticleRedux.rejected]: (state) => {
+      state.loadingPostArticle = false;
     },
   },
 });
