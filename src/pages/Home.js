@@ -7,21 +7,22 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllArticlesRedux } from '../features/articleSlice';
 import { getArticles, loadingArticlesSelector } from '../features/selectors';
+import { useApi } from '../contexts/ApiProvider';
 
 const Home = () => {
   const dispatch = useDispatch();
   const articles = useSelector(getArticles);
   const loadingArticles = useSelector(loadingArticlesSelector);
-
+  const api = useApi();
   useEffect(() => {
-    dispatch(getAllArticlesRedux());
+    dispatch(getAllArticlesRedux(api));
   }, [dispatch]);
 
   if (loadingArticles) {
     return <CircularProgress />;
   }
 
-  if (!articles.length) {
+  if (!articles?.length) {
     return (
       <div className="empty-array">
         <h2>We don't have any posted articles yet</h2>
@@ -34,7 +35,7 @@ const Home = () => {
       <Box>
         <Card>
           <div className="main-container">
-            {articles.map((singleArticle) => {
+            {articles?.map((singleArticle) => {
               return (
                 <Link
                   className="main-articles"

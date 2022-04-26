@@ -1,5 +1,7 @@
 export const getArticles = ({ articles }) => articles.articles;
-export const getArticle = ({ articles }) => articles.article;
+export const getArticle = ({ articles }) => {
+  return articles.article;
+};
 export const getMyArticles = ({ articles }) => {
   return articles.myArticles;
 };

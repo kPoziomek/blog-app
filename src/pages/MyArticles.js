@@ -6,7 +6,7 @@ import './MyArticles.css';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   getMyArticlesRedux,
   deleteMyArticleRedux,
@@ -17,28 +17,31 @@ import {
   loadingMyArticleSelector,
 } from '../features/selectors.js';
 import { useDispatch, useSelector } from 'react-redux';
+import { useApi } from '../contexts/ApiProvider';
 
 const MyArticles = () => {
   const dispatch = useDispatch();
+  const api = useApi();
+  let { id } = useParams();
   useEffect(() => {
-    dispatch(getMyArticlesRedux());
-  }, [dispatch]);
+    dispatch(getMyArticlesRedux(api));
+  }, [api, dispatch]);
 
   const myArticles = useSelector(getMyArticles);
   const loadingMyArticles = useSelector(loadingMyArticleSelector);
 
   const postPost = (id) => {
-    dispatch(postMyArticleRedux(id));
+    dispatch(postMyArticleRedux({ id, api }));
   };
   const deletePost = (id) => {
-    dispatch(deleteMyArticleRedux(id));
+    dispatch(deleteMyArticleRedux({ id, api }));
   };
 
   if (loadingMyArticles) {
     return <CircularProgress />;
   }
 
-  if (myArticles.length === 0) {
+  if (myArticles?.length === 0) {
     return (
       <div className="empty-array">
         <h2>You have not created any articles yet</h2>
@@ -49,7 +52,7 @@ const MyArticles = () => {
   return (
     <div>
       <Box className="my-article">
-        {myArticles.map((singleArticle) => {
+        {myArticles?.map((singleArticle) => {
           return (
             <BlogThumbnailContent
               key={singleArticle.id}
