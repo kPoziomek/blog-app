@@ -76,7 +76,12 @@ const NavigationMenu = ({ isToken, handleLogin }) => {
         {isToken &&
           DataNavigation.map((el) => {
             return (
-              <MenuItem key={el.id} component={Link} to={el.to}>
+              <MenuItem
+                aria-labelledby={el.id}
+                key={el.id}
+                component={Link}
+                to={el.to}
+              >
                 <ListItemIcon>{el.Icon}</ListItemIcon> {el.articleName}
               </MenuItem>
             );

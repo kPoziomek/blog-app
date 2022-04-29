@@ -23,6 +23,7 @@ const Navigation = () => {
         .authMe()
         .then((res) => {
           const userData = res.data;
+
           setUserName(`${userData.firstName} ${userData.lastName} `);
         })
         .catch((err) => console.log(err));
@@ -59,6 +60,7 @@ const Navigation = () => {
               </h3>
             </div>
             <NavigationMenu
+              aria-label="test navigation"
               userName={userName}
               isToken={isToken}
               loggedIn={loggedIn}
