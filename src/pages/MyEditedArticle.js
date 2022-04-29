@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ArticleForm from './components/ArticleForm';
 import { Box, CircularProgress } from '@mui/material';
+import { useApi } from '../contexts/ApiProvider';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -9,29 +10,31 @@ import {
   editSingleArticleRedux,
 } from '../features/articleSlice';
 import {
-  getMyArticle,
+  getArticle,
   isEditedArticleSelector,
   loadingSingleArticleSelector,
 } from '../features/selectors';
 
 const MyEditedArticle = () => {
+  const api = useApi();
   const dispatch = useDispatch();
-
-  const article = useSelector(getMyArticle);
+  const article = useSelector(getArticle);
   const isEdited = useSelector(isEditedArticleSelector);
   const loadingSingleArticle = useSelector(loadingSingleArticleSelector);
   const { id } = useParams();
   const navigate = useNavigate();
+  const normalizedObject = { id, api };
+
   useEffect(() => {
-    dispatch(getSingleArticleRedux(id));
-  }, [dispatch, id]);
+    dispatch(getSingleArticleRedux(normalizedObject));
+  }, [dispatch]);
 
   useEffect(() => {
     isEdited && navigate(`/articles/${id}`);
   }, [id, isEdited, navigate]);
 
   const handleSubmit = (values) => {
-    dispatch(editSingleArticleRedux({ id, values }));
+    dispatch(editSingleArticleRedux({ values, normalizedObject }));
   };
 
   if (loadingSingleArticle) {
@@ -42,6 +45,7 @@ const MyEditedArticle = () => {
       </Box>
     );
   }
+
   const defaultData = {
     title: article.title,
     summary: article.summary,

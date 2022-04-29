@@ -7,17 +7,21 @@ import {
   Paper,
   TextField,
 } from '@mui/material';
-import { loginUserAPI } from '../helpers/axiosConfig';
+
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import HomeIcon from '@mui/icons-material/Home';
 import './Login.css';
+import { useApi } from '../contexts/ApiProvider';
+
 const Login = () => {
+  const api = useApi();
   const navigate = useNavigate();
   const logUser = (user) => {
-    loginUserAPI(user)
+    api
+      .loginUserAPI(user)
       .then((res) => {
         const { data } = res;
         localStorage.setItem('token', data.auth_token);

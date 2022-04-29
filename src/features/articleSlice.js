@@ -1,12 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  deleteMyArticle,
-  editSingleArticle,
-  getArticles,
-  getMyArticles,
-  getSingleArticle,
-  postMyArticle,
-} from '../helpers/axiosConfig';
 
 const initialState = {
   articles: [],
@@ -24,8 +16,8 @@ const initialState = {
 /// actions
 export const getAllArticlesRedux = createAsyncThunk(
   'articles/getArticles',
-  async () => {
-    const res = await getArticles();
+  async (api) => {
+    const res = await api.getArticles();
     return res.data;
   }
 );
@@ -33,40 +25,41 @@ export const getAllArticlesRedux = createAsyncThunk(
 export const getMyArticlesRedux = createAsyncThunk(
   'articles/getMyArticles',
 
-  async () => {
-    const res = await getMyArticles();
+  async (api) => {
+    const res = await api.getMyArticles();
+
     return res.data;
   }
 );
 export const getSingleArticleRedux = createAsyncThunk(
   'articles/getSingleArticle',
-  async (id) => {
-    const res = await getSingleArticle(id);
+  async ({ id, api }) => {
+    const res = await api.getSingleArticle(id);
     return res.data;
   }
 );
 export const editSingleArticleRedux = createAsyncThunk(
   'articles/editSingleArticle',
-  async ({ id, values }) => {
-    const res = await editSingleArticle(id, values);
+  async ({ values, normalizedObject }) => {
+    const { id, api } = normalizedObject;
+
+    const res = await api.editSingleArticle(id, values);
     return res.data;
   }
 );
 
 export const deleteMyArticleRedux = createAsyncThunk(
   'articles/deleteMyArticle',
-
-  async (id) => {
-    const res = await deleteMyArticle(id);
-
+  async ({ api, id }) => {
+    const res = await api.deleteMyArticle(id);
     return res.data;
   }
 );
 
 export const postMyArticleRedux = createAsyncThunk(
   'articles/postMyArticle',
-  async (id) => {
-    const res = await postMyArticle(id);
+  async ({ api, id }) => {
+    const res = await api.postMyArticle(id);
     return res.data;
   }
 );
@@ -152,5 +145,3 @@ export const articleSlice = createSlice({
     },
   },
 });
-
-export const articleReducer = articleSlice.reducer;

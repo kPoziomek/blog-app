@@ -1,47 +1,54 @@
+// import axios from 'axios';
+
 import axios from 'axios';
 
-export const instance = axios.create({
-  baseURL: 'http://localhost:4000/api',
-});
+class AxiosConfig {
+  instance;
+  constructor() {
+    this.instance = axios.create({
+      baseURL: 'http://localhost:4000/api',
+    });
+    this.instance.interceptors.request.use(
+      (conf) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          conf.headers.Authorization = `Bearer ${token}`;
+        }
+        return conf;
+      },
+      (error) => console.warn(error)
+    );
+  }
+  loginUserAPI = (data) => {
+    return this.instance.post('/auth/login', data);
+  };
 
-instance.interceptors.request.use(
-  (conf) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      conf.headers.Authorization = `Bearer ${token}`;
-    }
-    return conf;
-  },
-  (error) => console.warn(error)
-);
+  authMe = () => {
+    return this.instance.get('/auth/me');
+  };
+  getArticles = () => {
+    return this.instance.get('/articles');
+  };
 
-export const loginUserAPI = (data) => {
-  return instance.post('/auth/login', data);
-};
+  getSingleArticle = (id) => {
+    return this.instance.get(`articles/${id}`);
+  };
+  postSingleArticle = (data) => {
+    return this.instance.post('/articles', data);
+  };
+  getMyArticles = () => {
+    return this.instance.get(`/articles/my`);
+  };
+  postMyArticle = (id) => {
+    return this.instance.patch(`/articles/${id}/publish`);
+  };
 
-export const authMe = () => {
-  return instance.get('/auth/me');
-};
-export const getArticles = () => {
-  return instance.get('/articles');
-};
+  deleteMyArticle = (id) => {
+    return this.instance.delete(`/articles/${id}`);
+  };
+  editSingleArticle = (id, data) => {
+    return this.instance.patch(`/articles/${id}`, data);
+  };
+}
 
-export const getSingleArticle = (id) => {
-  return instance.get(`articles/${id}`);
-};
-export const postSingleArticle = (data) => {
-  return instance.post('/articles', data);
-};
-export const getMyArticles = () => {
-  return instance.get(`/articles/my`);
-};
-export const postMyArticle = (id) => {
-  return instance.patch(`/articles/${id}/publish`);
-};
-
-export const deleteMyArticle = (id) => {
-  return instance.delete(`/articles/${id}`);
-};
-export const editSingleArticle = (id, data) => {
-  return instance.patch(`/articles/${id}`, data);
-};
+export default AxiosConfig;

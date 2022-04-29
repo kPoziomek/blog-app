@@ -4,24 +4,29 @@ import { useNavigate } from 'react-router-dom';
 import { Box, AppBar, Toolbar } from '@mui/material';
 
 import ReactLogo from '../Images/logo512.png';
-import { authMe } from '../helpers/axiosConfig';
 
 import './Navigation.css';
 import NavigationMenu from './NavigationMenu';
+import { useApi } from '../contexts/ApiProvider';
 
 const Navigation = () => {
   const [isToken, setIsToken] = useState(false);
   const [userName, setUserName] = useState();
   const loggedIn = localStorage.key('token');
+  const api = useApi();
 
   useEffect(() => {
-    if (loggedIn) {
+    if (loggedIn === 'token') {
       setIsToken(true);
-      authMe().then((res) => {
-        console.log(res);
-        const userData = res.data;
-        setUserName(`${userData.firstName} ${userData.lastName} `);
-      });
+
+      api
+        .authMe()
+        .then((res) => {
+          const userData = res.data;
+
+          setUserName(`${userData.firstName} ${userData.lastName} `);
+        })
+        .catch((err) => console.log(err));
     }
   }, [loggedIn]);
 
@@ -55,6 +60,7 @@ const Navigation = () => {
               </h3>
             </div>
             <NavigationMenu
+              aria-label="test navigation"
               userName={userName}
               isToken={isToken}
               loggedIn={loggedIn}
