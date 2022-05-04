@@ -32,7 +32,7 @@ describe('should navigation renders correctly', () => {
     );
 
     const navLogoText = screen.getByTestId('nav-logo-text');
-    expect(navLogoText.textContent).toBe('Blog-App');
+    expect(navLogoText).toHaveTextContent('Blog-App');
   });
 
   it('display logo .png', () => {
@@ -52,7 +52,7 @@ describe('should navigation renders correctly', () => {
       </BrowserRouter>
     );
     const navGreeting = screen.getByTestId('greeting-text');
-    expect(navGreeting.textContent).toBe('Hello Stranger');
+    expect(navGreeting).toHaveTextContent('Hello Stranger');
   });
 
   it('nav greetings show user', async () => {

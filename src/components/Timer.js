@@ -6,7 +6,7 @@ const Timer = () => {
   const [isActive, setIsActive] = useState(false);
 
   const toggle = () => {
-    setIsActive(!isActive);
+    setIsActive((prevValue) => !prevValue);
   };
   const timerReset = () => {
     setSeconds(0);
@@ -36,7 +36,7 @@ const Timer = () => {
         variant="h3"
         sx={{ mx: 2, my: 2 }}
       >
-        {seconds ? seconds : '0'}
+        {seconds}
       </Typography>
       <div className="mt-2 ">
         <Button

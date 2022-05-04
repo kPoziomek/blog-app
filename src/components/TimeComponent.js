@@ -3,10 +3,11 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Modal from '@mui/material/Modal';
-import React, { useCallback, useContext } from 'react';
+import React from 'react';
 import { ThemesProvider } from '../contexts/ThemesProvider';
 import { ThemeProvider } from '@mui/material/styles';
 import Timer from './Timer';
+import { StopWatch } from './StopWatch';
 
 export const TimeComponent = ({ isModalOpen, handleTimeComponent }) => {
   const style = {
@@ -37,7 +38,7 @@ export const TimeComponent = ({ isModalOpen, handleTimeComponent }) => {
       <Modal
         title="modal title"
         open={isModalOpen}
-        onClose={() => handleTimeComponent()}
+        onClose={handleTimeComponent}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -51,10 +52,13 @@ export const TimeComponent = ({ isModalOpen, handleTimeComponent }) => {
             variant="h3"
             sx={{ mx: 2, my: 2 }}
           >
-            {today.getHours()}:{today.getMinutes()}:{today.getSeconds()}
+            {today.toLocaleTimeString('pl-PL', { hour12: false })}
           </Typography>
           <Divider />
           <Timer />
+          <Divider />
+          <StopWatch />
+          <Divider />
         </Box>
       </Modal>
     </>

@@ -119,11 +119,7 @@ exports[`Time Components Modal Clicking button open modal 1`] = `
         class="MuiTypography-root MuiTypography-h3 css-1csm5re-MuiTypography-root"
         id="modal-modal-description"
       >
-        10
-        :
-        25
-        :
-        40
+        09:00:02
       </h2>
       <hr
         class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
@@ -167,6 +163,57 @@ exports[`Time Components Modal Clicking button open modal 1`] = `
           </button>
         </div>
       </div>
+      <hr
+        class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+      />
+      <div
+        class="container MuiBox-root css-0"
+      >
+        <h2
+          class="MuiTypography-root MuiTypography-h6 css-19fzd3z-MuiTypography-root"
+        >
+          StopWatch Reducer
+        </h2>
+        <h2
+          class="MuiTypography-root MuiTypography-h3 css-1csm5re-MuiTypography-root"
+          id="modal-modal-description"
+        >
+          0
+        </h2>
+        <button
+          class="MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-wnpvqa-MuiButtonBase-root-MuiButton-root"
+          tabindex="0"
+          type="button"
+        >
+          Start
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          class="MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-16hpjav-MuiButtonBase-root-MuiButton-root"
+          tabindex="0"
+          type="button"
+        >
+          Stop
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          class="MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-wnpvqa-MuiButtonBase-root-MuiButton-root"
+          tabindex="0"
+          type="button"
+        >
+          Reset
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+      <hr
+        class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"
+      />
     </div>
     <div
       data-test="sentinelEnd"

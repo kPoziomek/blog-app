@@ -5,9 +5,14 @@ import '@testing-library/jest-dom';
 import Navigation from '../Navigation';
 
 describe('Time Components Modal', () => {
-  it.only('Clicking button open modal', async () => {
+  beforeAll(() => {
     jest.useFakeTimers();
-
+    jest.setSystemTime(new Date('17 May 2022 09:00:00'));
+  });
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+  it('Clicking button open modal', async () => {
     const { baseElement } = render(
       <BrowserRouter>
         <Navigation />
@@ -16,18 +21,14 @@ describe('Time Components Modal', () => {
     const button = screen.getByRole('button', { name: 'Open modal' });
 
     fireEvent.click(button);
-
     act(() => {
       jest.advanceTimersByTime(2000);
     });
     const today = new Date();
     const time = today.toTimeString();
-    const modalTitle = screen.getByText(`Current Time is:`, {
-      textContent: true,
-    });
-    const modalDescription = screen.getByText(`${time.slice(0, 8)}`, {
-      textContent: true,
-    });
+
+    const modalTitle = screen.getByText(`Current Time is:`);
+    const modalDescription = screen.getByText(`${time.slice(0, 8)}`);
 
     expect(baseElement).toMatchSnapshot();
     expect(modalTitle).toBeInTheDocument();
@@ -35,8 +36,21 @@ describe('Time Components Modal', () => {
   });
 
   it('Time stamp', () => {
-    jest.useFakeTimers(2000);
+    render(
+      <BrowserRouter>
+        <Navigation />
+      </BrowserRouter>
+    );
+    const button = screen.queryByRole('button', { name: /open modal/i });
 
-    jest.setSystemTime(new Date('20 Aug 2020 02:12:00 GMT').getTime());
+    fireEvent.click(button);
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
+    const today = new Date();
+    const time = today.toTimeString();
+    const timer = screen.queryByText(`${time.slice(0, 8)}`);
+
+    expect(timer).toBeInTheDocument();
   });
 });
