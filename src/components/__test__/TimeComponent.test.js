@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import Navigation from '../Navigation';
 
 describe('Time Components Modal', () => {
-  it('Clicking button open modal', async () => {
+  it.only('Clicking button open modal', async () => {
     jest.useFakeTimers();
 
     const { baseElement } = render(
@@ -20,18 +20,23 @@ describe('Time Components Modal', () => {
     act(() => {
       jest.advanceTimersByTime(2000);
     });
-    expect(baseElement).toMatchSnapshot();
+    const today = new Date();
+    const time = today.toTimeString();
+    const modalTitle = screen.getByText(`Current Time is:`, {
+      textContent: true,
+    });
+    const modalDescription = screen.getByText(`${time.slice(0, 8)}`, {
+      textContent: true,
+    });
 
-    const modalTitle = await screen.findByText('Current Time is:');
+    expect(baseElement).toMatchSnapshot();
     expect(modalTitle).toBeInTheDocument();
+    expect(modalDescription).toBeInTheDocument();
   });
 
   it('Time stamp', () => {
-    jest.useFakeTimers();
-    const today = new Date();
-    const time = today.getTime();
+    jest.useFakeTimers(2000);
 
-    console.log(time);
     jest.setSystemTime(new Date('20 Aug 2020 02:12:00 GMT').getTime());
   });
 });

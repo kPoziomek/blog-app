@@ -68,6 +68,7 @@ exports[`Time Components Modal Clicking button open modal 1`] = `
               aria-label="Account"
               class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall css-137ul40-MuiButtonBase-root-MuiIconButton-root"
               data-mui-internal-clone-element="true"
+              data-testid="menu-element"
               tabindex="0"
               type="button"
             >
@@ -118,11 +119,11 @@ exports[`Time Components Modal Clicking button open modal 1`] = `
         class="MuiTypography-root MuiTypography-h3 css-1csm5re-MuiTypography-root"
         id="modal-modal-description"
       >
-        13
+        10
         :
-        45
+        25
         :
-        4
+        40
       </h2>
       <hr
         class="MuiDivider-root MuiDivider-fullWidth css-9mgopn-MuiDivider-root"

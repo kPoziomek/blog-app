@@ -27,6 +27,7 @@ const NavigationMenu = ({ isToken, handleLogin }) => {
       <Box>
         <Tooltip title="Account">
           <IconButton
+            data-testid="menu-element"
             onClick={handleClick}
             size="small"
             sx={{ ml: 2 }}

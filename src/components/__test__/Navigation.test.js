@@ -74,18 +74,18 @@ describe('should navigation renders correctly', () => {
     act(() => {
       mock.onGet(/\/auth\/me/).reply(200, user);
     });
-    const navGreeting = await screen.findByText(
-      `Hello ${user.firstName} ${user.lastName}`
-    );
-    expect(navGreeting).toBeInTheDocument();
+
+    expect(
+      await screen.findByText(`Hello ${user.firstName} ${user.lastName}`)
+    ).toBeInTheDocument();
   });
 });
 
 describe('should show navigation menu', () => {
   it('menu renders 4 elements', async () => {
     const user = {
-      firstName: 'Kris',
-      lastName: 'Auer',
+      firstName: 'Oswald',
+      lastName: 'Yundt',
     };
 
     act(() => {
@@ -102,7 +102,8 @@ describe('should show navigation menu', () => {
     act(() => {
       mock.onGet(/\/auth\/me/).reply(200, user);
     });
-    const menuBtn = screen.getByRole('button');
+    const menuBtn = screen.getByTestId('menu-element');
+
     fireEvent.click(menuBtn);
 
     const list = screen.getByRole('menu');
