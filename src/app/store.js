@@ -7,3 +7,10 @@ export const store = configureStore({
     articles: articleSlice.reducer,
   },
 });
+
+export const createStore = () =>
+  configureStore({
+    reducer: {
+      articles: articleSlice.reducer,
+    },
+  });

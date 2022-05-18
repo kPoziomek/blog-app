@@ -11,20 +11,16 @@ import {
   getArticle,
   loadingSingleArticleSelector,
 } from '../features/selectors';
-import { useApi } from '../contexts/ApiProvider';
 
 const Article = () => {
   const dispatch = useDispatch();
   const { author, title, content } = useSelector(getArticle);
   const loadingSingleArticle = useSelector(loadingSingleArticleSelector);
   let { id } = useParams();
-  const api = useApi();
-
-  const normalizedObject = { id, api };
 
   const sanitizer = dompurify.sanitize;
   useEffect(() => {
-    dispatch(getSingleArticleRedux(normalizedObject));
+    dispatch(getSingleArticleRedux({ id }));
   }, [dispatch]);
 
   if (loadingSingleArticle) {

@@ -2,26 +2,16 @@ import React from 'react';
 import Navigation from '../Navigation';
 
 import { BrowserRouter } from 'react-router-dom';
-import {
-  render,
-  screen,
-  cleanup,
-  fireEvent,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 
 import '@testing-library/jest-dom/extend-expect';
-
+import factory from './factory';
 import MockAdapter from 'axios-mock-adapter';
-import AxiosConfig from '../../helpers/axiosConfig';
-import ApiProvider from '../../contexts/ApiProvider';
-import { act } from 'react-dom/test-utils';
-const api = new AxiosConfig();
+import { instance } from '../../helpers/axiosConfig';
 
-const mock = new MockAdapter(api.instance, {
-  onNoMatch: 'throwException',
-});
+import userEvent from '@testing-library/user-event';
+
+const mock = new MockAdapter(instance);
 
 describe('should navigation renders correctly', () => {
   it('nav logo return text', () => {
@@ -56,69 +46,42 @@ describe('should navigation renders correctly', () => {
   });
 
   it('nav greetings show user', async () => {
-    const user = {
-      firstName: 'Kris',
-      lastName: 'Auer',
-    };
-    act(() => {
-      localStorage.setItem('token', 'test');
-    });
+    const user1 = await factory.attrs('User');
+    localStorage.setItem('token', 'test');
+
+    mock.onGet('auth/me').reply(200, await user1);
+
     render(
       <BrowserRouter>
-        <ApiProvider axiosConfig={api}>
-          <Navigation />
-        </ApiProvider>
+        <Navigation />
       </BrowserRouter>
     );
 
-    act(() => {
-      mock.onGet(/\/auth\/me/).reply(200, user);
+    await waitFor(() => {
+      expect(
+        screen.getByText(`Hello ${user1.firstName} ${user1.lastName}`)
+      ).toBeInTheDocument();
     });
-
-    expect(
-      await screen.findByText(`Hello ${user.firstName} ${user.lastName}`)
-    ).toBeInTheDocument();
   });
 });
 
 describe('should show navigation menu', () => {
   it('menu renders 4 elements', async () => {
-    const user = {
-      firstName: 'Oswald',
-      lastName: 'Yundt',
-    };
-
-    act(() => {
-      localStorage.setItem('token', 'test');
-    });
     render(
       <BrowserRouter>
-        <ApiProvider axiosConfig={api}>
-          <Navigation />
-        </ApiProvider>
+        <Navigation />
       </BrowserRouter>
     );
 
-    act(() => {
-      mock.onGet(/\/auth\/me/).reply(200, user);
-    });
     const menuBtn = screen.getByTestId('menu-element');
 
-    fireEvent.click(menuBtn);
+    userEvent.click(menuBtn);
 
     const list = screen.getByRole('menu');
 
     const { getAllByRole } = within(list);
     const items = getAllByRole('menuitem');
 
-    await waitFor(() => {
-      expect(
-        screen.getByText(`Hello ${user.firstName} ${user.lastName}`)
-      ).toBeInTheDocument();
-    });
-
     expect(items.length).toBe(4);
   });
 });
-
-afterEach(cleanup);

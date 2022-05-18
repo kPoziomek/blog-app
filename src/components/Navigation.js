@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Box, AppBar, Toolbar } from '@mui/material';
@@ -7,22 +7,21 @@ import ReactLogo from '../Images/logo512.png';
 
 import './Navigation.css';
 import NavigationMenu from './NavigationMenu';
-import { useApi } from '../contexts/ApiProvider';
+
 import { TimeComponent } from './TimeComponent';
+import { authMe } from '../helpers/axiosConfig';
 
 const Navigation = () => {
   const [isToken, setIsToken] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userName, setUserName] = useState();
   const loggedIn = localStorage.key('token');
-  const api = useApi();
 
   useEffect(() => {
     if (loggedIn === 'token') {
       setIsToken(true);
 
-      api
-        .authMe()
+      authMe()
         .then((res) => {
           const userData = res.data;
 

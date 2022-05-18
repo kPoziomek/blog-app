@@ -1,9 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const initialState = {
+import {
+  deleteMyArticle,
+  editSingleArticle,
+  getArticles,
+  getMyArticles,
+  getSingleArticle,
+  postMyArticle,
+  postSingleArticle,
+} from '../helpers/axiosConfig';
+
+export const initialState = {
   articles: [],
   myArticles: [],
-  article: {},
+  article: [],
 
   loadingArticles: false,
   loadingMyArticle: false,
@@ -11,13 +21,22 @@ const initialState = {
   loadingSingleArticle: false,
   loadingDeletedArticle: false,
   loadingPostArticle: false,
+  navigateToHome: false,
 };
 
 /// actions
 export const getAllArticlesRedux = createAsyncThunk(
   'articles/getArticles',
-  async (api) => {
-    const res = await api.getArticles();
+  async () => {
+    const res = await getArticles();
+
+    return res.data;
+  }
+);
+export const postArticleRedux = createAsyncThunk(
+  'articles/postArticle',
+  async (data) => {
+    const res = await postSingleArticle(data);
     return res.data;
   }
 );
@@ -25,41 +44,40 @@ export const getAllArticlesRedux = createAsyncThunk(
 export const getMyArticlesRedux = createAsyncThunk(
   'articles/getMyArticles',
 
-  async (api) => {
-    const res = await api.getMyArticles();
-
+  async () => {
+    const res = await getMyArticles();
     return res.data;
   }
 );
 export const getSingleArticleRedux = createAsyncThunk(
   'articles/getSingleArticle',
-  async ({ id, api }) => {
-    const res = await api.getSingleArticle(id);
+  async ({ id }) => {
+    const res = await getSingleArticle(id);
     return res.data;
   }
 );
 export const editSingleArticleRedux = createAsyncThunk(
   'articles/editSingleArticle',
-  async ({ values, normalizedObject }) => {
-    const { id, api } = normalizedObject;
-
-    const res = await api.editSingleArticle(id, values);
+  async (id, values) => {
+    const res = await editSingleArticle(id, values);
     return res.data;
   }
 );
 
 export const deleteMyArticleRedux = createAsyncThunk(
   'articles/deleteMyArticle',
-  async ({ api, id }) => {
-    const res = await api.deleteMyArticle(id);
+
+  async (id) => {
+    const res = await deleteMyArticle(id);
+
     return res.data;
   }
 );
 
 export const postMyArticleRedux = createAsyncThunk(
   'articles/postMyArticle',
-  async ({ api, id }) => {
-    const res = await api.postMyArticle(id);
+  async (id) => {
+    const res = await postMyArticle(id);
     return res.data;
   }
 );
@@ -80,6 +98,23 @@ export const articleSlice = createSlice({
     [getAllArticlesRedux.rejected]: (state) => {
       state.loadingArticles = false;
     },
+
+    //postSingleArticle
+
+    [postArticleRedux.pending]: (state) => {
+      state.loadingMyArticle = true;
+      state.navigateToHome = true;
+    },
+    [postArticleRedux.fulfilled]: (state, { payload }) => {
+      state.loadingMyArticle = false;
+      state.navigateToHome = false;
+      state.articles = payload;
+    },
+    [postArticleRedux.rejected]: (state) => {
+      state.navigateToHome = false;
+      state.loadingMyArticle = false;
+    },
+
     // myArticles
     [getMyArticlesRedux.pending]: (state) => {
       state.loadingMyArticle = true;
@@ -145,3 +180,5 @@ export const articleSlice = createSlice({
     },
   },
 });
+
+export const articleReducer = articleSlice.reducer;

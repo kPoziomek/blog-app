@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import ArticleForm from './components/ArticleForm';
 import { useNavigate } from 'react-router-dom';
-import { useApi } from '../contexts/ApiProvider';
-
+import { postArticleRedux } from '../features/articleSlice';
+import { navToHomePage } from '../features/selectors.js';
+import { useDispatch, useSelector } from 'react-redux';
 const CreateArticle = () => {
-  const api = useApi();
+  const navToHome = useSelector(navToHomePage);
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleSubmit = (values) => {
-    api.postSingleArticle(values).then((data) => {
-      const { id } = data.data;
-      navigate(`/articles/${id}`);
-    });
+    dispatch(postArticleRedux(values));
+    if (!navToHome) {
+      navigate('/');
+    }
   };
+
   return <ArticleForm title="Create Article" onSubmit={handleSubmit} />;
 };
 

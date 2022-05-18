@@ -7,15 +7,14 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllArticlesRedux } from '../features/articleSlice';
 import { getArticles, loadingArticlesSelector } from '../features/selectors';
-import { useApi } from '../contexts/ApiProvider';
 
 const Home = () => {
   const dispatch = useDispatch();
   const articles = useSelector(getArticles);
   const loadingArticles = useSelector(loadingArticlesSelector);
-  const api = useApi();
+
   useEffect(() => {
-    dispatch(getAllArticlesRedux(api));
+    dispatch(getAllArticlesRedux());
   }, [dispatch]);
 
   if (loadingArticles) {

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ArticleForm from './components/ArticleForm';
 import { Box, CircularProgress } from '@mui/material';
-import { useApi } from '../contexts/ApiProvider';
+
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -16,25 +16,23 @@ import {
 } from '../features/selectors';
 
 const MyEditedArticle = () => {
-  const api = useApi();
   const dispatch = useDispatch();
   const article = useSelector(getArticle);
   const isEdited = useSelector(isEditedArticleSelector);
   const loadingSingleArticle = useSelector(loadingSingleArticleSelector);
   const { id } = useParams();
   const navigate = useNavigate();
-  const normalizedObject = { id, api };
 
   useEffect(() => {
-    dispatch(getSingleArticleRedux(normalizedObject));
+    dispatch(getSingleArticleRedux({ id }));
   }, [dispatch]);
 
   useEffect(() => {
     isEdited && navigate(`/articles/${id}`);
   }, [id, isEdited, navigate]);
 
-  const handleSubmit = (values) => {
-    dispatch(editSingleArticleRedux({ values, normalizedObject }));
+  const handleSubmit = (editedData) => {
+    dispatch(editSingleArticleRedux({ id, editedData }));
   };
 
   if (loadingSingleArticle) {

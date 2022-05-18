@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import Navigation from '../Navigation';
 
 describe('Time Components Modal', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date('17 May 2022 09:00:00'));
   });

@@ -17,24 +17,23 @@ import {
   loadingMyArticleSelector,
 } from '../features/selectors.js';
 import { useDispatch, useSelector } from 'react-redux';
-import { useApi } from '../contexts/ApiProvider';
 
 const MyArticles = () => {
   const dispatch = useDispatch();
-  const api = useApi();
+
   let { id } = useParams();
   useEffect(() => {
-    dispatch(getMyArticlesRedux(api));
-  }, [api, dispatch]);
+    dispatch(getMyArticlesRedux());
+  }, [, dispatch]);
 
   const myArticles = useSelector(getMyArticles);
   const loadingMyArticles = useSelector(loadingMyArticleSelector);
 
   const postPost = (id) => {
-    dispatch(postMyArticleRedux({ id, api }));
+    dispatch(postMyArticleRedux(id));
   };
   const deletePost = (id) => {
-    dispatch(deleteMyArticleRedux({ id, api }));
+    dispatch(deleteMyArticleRedux(id));
   };
 
   if (loadingMyArticles) {

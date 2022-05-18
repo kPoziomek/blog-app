@@ -14,14 +14,12 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import HomeIcon from '@mui/icons-material/Home';
 import './Login.css';
-import { useApi } from '../contexts/ApiProvider';
+import { loginUserAPI } from '../helpers/axiosConfig.js';
 
 const Login = () => {
-  const api = useApi();
   const navigate = useNavigate();
   const logUser = (user) => {
-    api
-      .loginUserAPI(user)
+    loginUserAPI(user)
       .then((res) => {
         const { data } = res;
         localStorage.setItem('token', data.auth_token);

@@ -19,3 +19,7 @@ export const loadingMyArticleSelector = ({ articles }) => {
 export const isEditedArticleSelector = ({ articles }) => {
   return articles.isEdited;
 };
+
+export const navToHomePage = ({ articles }) => {
+  return articles.navigateToHome;
+};

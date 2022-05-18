@@ -7,16 +7,13 @@ import App from './App';
 import { store } from './app/store';
 import { Provider } from 'react-redux';
 import reportWebVitals from './reportWebVitals';
-import ApiProvider from './contexts/ApiProvider';
 
 ReactDOM.render(
-  <ApiProvider>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </ApiProvider>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
   document.getElementById('root')
 );
 
