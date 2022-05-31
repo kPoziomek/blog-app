@@ -27,6 +27,7 @@ const NavigationMenu = ({ isToken, handleLogin }) => {
       <Box>
         <Tooltip title="Account">
           <IconButton
+            data-testid="menu-element"
             onClick={handleClick}
             size="small"
             sx={{ ml: 2 }}
@@ -76,7 +77,12 @@ const NavigationMenu = ({ isToken, handleLogin }) => {
         {isToken &&
           DataNavigation.map((el) => {
             return (
-              <MenuItem key={el.id} component={Link} to={el.to}>
+              <MenuItem
+                aria-labelledby={el.id}
+                key={el.id}
+                component={Link}
+                to={el.to}
+              >
                 <ListItemIcon>{el.Icon}</ListItemIcon> {el.articleName}
               </MenuItem>
             );

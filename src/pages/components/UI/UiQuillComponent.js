@@ -12,6 +12,7 @@ const UiQuillComponent = ({ onChange, value, error }) => {
     <>
       <div className={errorClass}>
         <ReactQuill
+          data-testid="content"
           id="content"
           name="content"
           value={value}

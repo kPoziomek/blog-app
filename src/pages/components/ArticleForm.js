@@ -11,10 +11,9 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
-import React, { useCallback } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import UiQuillComponent from './UI/UiQuillComponent';
+
 import './ArticleForm.css';
 import PublishOutlinedIcon from '@mui/icons-material/PublishOutlined';
 const initialValues = { title: '', summary: '', content: '', publish: false };
@@ -43,13 +42,6 @@ const ArticleForm = ({ title, formData = initialValues, onSubmit }) => {
     initialValues: formData,
     onSubmit: handlePostSend,
   });
-
-  const handleContentChange = useCallback(
-    (childData) => {
-      formik.setFieldValue('content', childData);
-    },
-    [formik]
-  );
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -86,10 +78,17 @@ const ArticleForm = ({ title, formData = initialValues, onSubmit }) => {
               error={formik.touched.title && Boolean(formik.errors.title)}
               helperText={formik.touched.title && formik.errors.title}
             />
-            <UiQuillComponent
+
+            <TextField
+              fullWidth
+              className="article-elements"
+              label="Content"
+              id="content"
+              name="content"
               value={formik.values.content}
-              onChange={handleContentChange}
-              error={formik.touched.content && formik.errors.content}
+              onChange={formik.handleChange}
+              error={formik.touched.content && Boolean(formik.errors.content)}
+              helperText={formik.touched.content && formik.errors.content}
             />
             <TextField
               fullWidth
