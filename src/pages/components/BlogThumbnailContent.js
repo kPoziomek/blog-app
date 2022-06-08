@@ -10,30 +10,28 @@ import {
 import './BlogThumbnailContent.css';
 
 const BlogThumbnailContent = ({ singleArticle, actionButtons }) => {
-  const { title, summary, authorFirstName, authorLastName, image } =
-    singleArticle;
+  const { title, summary, authorFullName, image } = singleArticle;
 
   return (
     <Card className="thumbnail-main" sx={{ maxWidth: 345 }}>
       <Typography gutterBottom variant="h6" component="div">
         Title: {title}
       </Typography>
-      <>
-        {image && (
-          <CardMedia component="img" image={ReactLogo} alt="react blog" />
-        )}
-      </>
+
+      {image && (
+        <CardMedia component="img" image={ReactLogo} alt="react blog" />
+      )}
+
       <CardContent>
         <Typography gutterBottom variant="subtitle2" component="div">
           {summary}
         </Typography>
-        <>
-          {authorFirstName && (
-            <Typography variant="body2" color="text.secondary">
-              {`${authorFirstName} ${authorLastName}`}
-            </Typography>
-          )}
-        </>
+
+        {authorFullName && (
+          <Typography variant="body2" color="text.secondary">
+            {authorFullName}
+          </Typography>
+        )}
       </CardContent>
       <CardActions>{actionButtons}</CardActions>
     </Card>

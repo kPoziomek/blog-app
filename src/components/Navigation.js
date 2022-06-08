@@ -1,36 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { Box, AppBar, Toolbar } from '@mui/material';
 
 import ReactLogo from '../Images/logo512.png';
-import { authMe } from '../helpers/axiosConfig';
 
 import './Navigation.css';
 import NavigationMenu from './NavigationMenu';
+import { AuthorizationContext } from '../context/AuthorizationContext';
 
 const Navigation = () => {
-  const [isToken, setIsToken] = useState(false);
-  const [userName, setUserName] = useState();
-  const loggedIn = localStorage.key('token');
-
-  useEffect(() => {
-    if (loggedIn) {
-      setIsToken(true);
-      authMe().then((res) => {
-        const userData = res.data;
-        setUserName(`${userData.firstName} ${userData.lastName} `);
-      });
-    }
-  }, [loggedIn]);
+  const { removeAuthToken, userName, dispatch } =
+    useContext(AuthorizationContext);
 
   const navigate = useNavigate();
   const handleLogin = () => {
-    if (isToken) {
-      setIsToken(false);
-      localStorage.removeItem('token');
+    if (userName) {
       navigate('/');
-      setUserName();
+      dispatch({ type: 'removeUserName' });
+      removeAuthToken();
     } else {
       navigate('/login');
     }
@@ -51,12 +39,7 @@ const Navigation = () => {
                 {`Hello ${userName ?? 'Stranger'} `}
               </h3>
             </div>
-            <NavigationMenu
-              userName={userName}
-              isToken={isToken}
-              loggedIn={loggedIn}
-              handleLogin={handleLogin}
-            />
+            <NavigationMenu handleLogin={handleLogin} />
           </Box>
         </Toolbar>
       </AppBar>

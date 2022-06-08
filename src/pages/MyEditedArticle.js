@@ -1,35 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Box, CircularProgress } from '@mui/material';
+
 import { useParams } from 'react-router-dom';
 import ArticleForm from './components/ArticleForm';
-import { getSingleArticle, editSingleArticle } from '../helpers/axiosConfig';
+import { editSingleArticle } from '../helpers/axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { usePostSingleArticle } from '../hooks/usePostSingleArticle';
+import useArticle from '../hooks/useArticle';
 const MyEditedArticle = () => {
-  const [singleArticleData, setSingleArticleData] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
-  useEffect(() => {
-    getSingleArticle(id).then(({ data }) => setSingleArticleData(data));
-  }, [id]);
+
+  const { isLoading, data } = useArticle(id);
+
+  const { mutate: editMutation } = usePostSingleArticle();
 
   const handleSubmit = (values) => {
-    editSingleArticle(id, values).then((data) => {
-      const { id } = data.data;
-      navigate(`/articles/${id}`);
-    });
+    editMutation(
+      { id, values },
+      {
+        onSuccess: () => {
+          navigate(`/articles/${data.id}`);
+        },
+      }
+    );
   };
 
-  if (singleArticleData === null) {
+  if (isLoading) {
     return (
-      <>
-        <p>Loading...</p>
-      </>
+      <Box className="empty-array">
+        <h2>Loading....</h2>
+        <CircularProgress />
+      </Box>
     );
   }
+
   const defaultData = {
-    title: singleArticleData.title,
-    summary: singleArticleData.summary,
-    content: singleArticleData.content,
-    publish: !!singleArticleData.publishedAt,
+    title: data.title,
+    summary: data.summary,
+    content: data.content,
+    publish: !!data.publishedAt,
   };
   return (
     <ArticleForm

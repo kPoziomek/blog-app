@@ -8,22 +8,29 @@ import {
   TextField,
 } from '@mui/material';
 import { loginUserAPI } from '../helpers/axiosConfig';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import HomeIcon from '@mui/icons-material/Home';
+
 import './Login.css';
+import { useError } from 'react-use';
+import { AuthorizationContext } from '../context/AuthorizationContext';
 const Login = () => {
+  const { setAuthToken } = useContext(AuthorizationContext);
+  const dispatchError = useError();
   const navigate = useNavigate();
+
   const logUser = (user) => {
     loginUserAPI(user)
       .then((res) => {
         const { data } = res;
-        localStorage.setItem('token', data.auth_token);
+
+        setAuthToken(data.auth_token);
         navigate('/');
       })
-      .catch((res) => console.log(res));
+      .catch((res) => dispatchError(new Error(res)));
   };
   const handleSubmit = (values) => {
     logUser(values);
