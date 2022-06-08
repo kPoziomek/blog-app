@@ -8,7 +8,7 @@ import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { Link } from 'react-router-dom';
 
-import useMyArticles from '../hooks/useMyArticles';
+import { useArticles } from '../hooks/useArticles';
 import { useQueryClient } from 'react-query';
 
 import { useDeleteArticle } from '../hooks/useDeleteArticle';
@@ -17,7 +17,11 @@ import { usePostArticle } from '../hooks/usePostArticle';
 const MyArticles = () => {
   const queryClient = useQueryClient();
 
-  const { isFetching, status, data } = useMyArticles();
+  const { isFetching, status, data } = useArticles({
+    enable: false,
+    staleTime: Infinity,
+  });
+  console.log(data);
   const { mutate: delMutate } = useDeleteArticle();
   const { mutate: postMutate } = usePostArticle();
 

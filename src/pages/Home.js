@@ -1,12 +1,20 @@
 import React from 'react';
 import './Home.css';
 import BlogThumbnailContent from './components/BlogThumbnailContent';
-import useArticleHook from '../hooks/useArticles';
+import { useArticles } from '../hooks/useArticles';
 import { Box, Card, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
+import AlertComponent from '../helpers/AlertComponent';
+import Footer from './components/Footer';
 
 const Home = () => {
-  const { data, isLoading } = useArticleHook();
+  const { data, isLoading, isError, error } = useArticles();
+  console.log(data);
+
+  if (isError) {
+    console.dir(error.message);
+    return <AlertComponent error={error} />;
+  }
 
   if (isLoading) {
     return (
@@ -22,7 +30,7 @@ const Home = () => {
       <Box>
         <Card>
           <div className="main-container">
-            {data.map((singleArticle) => {
+            {data?.map((singleArticle) => {
               return (
                 <Link
                   className="main-articles"
@@ -39,7 +47,7 @@ const Home = () => {
             })}
           </div>
 
-          <footer className="footer-container"></footer>
+          <Footer className="footer-container">{data?.length}</Footer>
         </Card>
       </Box>
     </>

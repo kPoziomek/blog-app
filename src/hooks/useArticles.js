@@ -7,6 +7,12 @@ const getArticlesHook = async () => {
   });
 };
 
-export default function useArticles() {
-  return useQuery('articles', getArticlesHook, { refetchOnWindowFocus: true });
-}
+export const useArticles = (options = {}) => {
+  const queryTest = useQuery(['articles'], getArticlesHook, options);
+  return {
+    ...queryTest,
+
+    useErrorBoundary: (error) => error.response?.status >= 500,
+    refetchOnWindowFocus: true,
+  };
+};
