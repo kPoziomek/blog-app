@@ -1,4 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  createDraftSafeSelector,
+} from '@reduxjs/toolkit';
 import {
   deleteMyArticle,
   editSingleArticle,
@@ -152,5 +156,9 @@ export const articleSlice = createSlice({
     },
   },
 });
+const selectSelf = (state) => state;
+export const draftSafeSelector = createDraftSafeSelector(selectSelf, (state) =>
+  state.filter((article) => article.publishedAt !== null)
+);
 
 export const articleReducer = articleSlice.reducer;

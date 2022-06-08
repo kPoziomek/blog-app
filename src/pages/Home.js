@@ -5,23 +5,28 @@ import BlogThumbnailContent from './components/BlogThumbnailContent';
 import { Box, Card, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllArticlesRedux } from '../features/articleSlice';
-import { getArticles, loadingArticlesSelector } from '../features/selectors';
+import {
+  draftSafeSelector,
+  getMyArticlesRedux,
+} from '../features/articleSlice';
+import { loadingMyArticleSelector, getMyArticles } from '../features/selectors';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const articles = useSelector(getArticles);
-  const loadingArticles = useSelector(loadingArticlesSelector);
+
+  const myArticles = useSelector(getMyArticles);
+  const draftedArticles = draftSafeSelector(myArticles);
+  const loadingArticles = useSelector(loadingMyArticleSelector);
 
   useEffect(() => {
-    dispatch(getAllArticlesRedux());
+    dispatch(getMyArticlesRedux());
   }, [dispatch]);
 
   if (loadingArticles) {
     return <CircularProgress />;
   }
 
-  if (!articles.length) {
+  if (!draftedArticles.length) {
     return (
       <div className="empty-array">
         <h2>We don't have any posted articles yet</h2>
@@ -34,7 +39,7 @@ const Home = () => {
       <Box>
         <Card>
           <div className="main-container">
-            {articles.map((singleArticle) => {
+            {draftedArticles?.map((singleArticle) => {
               return (
                 <Link
                   className="main-articles"
