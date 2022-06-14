@@ -1,44 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './Home.css';
 import BlogThumbnailContent from './components/BlogThumbnailContent';
-import { getArticles } from '../helpers/axiosConfig';
-import { Box, Card } from '@mui/material';
+
+import { Box, Card, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  draftSafeSelector,
+  getMyArticlesRedux,
+} from '../features/articleSlice';
+import { loadingMyArticleSelector, getMyArticles } from '../features/selectors';
 
 const Home = () => {
-  let [allArticles, setAllArticles] = useState([]);
-  useEffect(() => {
-    getArticles().then((res) => {
-      let articlesData = res.data;
-      const normalizedArticles = articlesData.map((singleElement) => {
-        const { id, title, summary, content, author } = singleElement;
-        return {
-          id,
-          title,
-          summary,
-          content,
-          authorFirstName: author.firstName,
-          authorLastName: author.lastName,
-          image: true,
-        };
-      });
-      setAllArticles(normalizedArticles);
-    });
-  }, []);
+  const dispatch = useDispatch();
 
-  if (allArticles.length === 0) {
+  const myArticles = useSelector(getMyArticles);
+  const draftedArticles = draftSafeSelector(myArticles);
+  const loadingArticles = useSelector(loadingMyArticleSelector);
+
+  useEffect(() => {
+    dispatch(getMyArticlesRedux());
+  }, [dispatch]);
+
+  if (loadingArticles) {
+    return <CircularProgress />;
+  }
+
+  if (!draftedArticles.length) {
     return (
       <div className="empty-array">
         <h2>We don't have any posted articles yet</h2>
       </div>
     );
   }
+
   return (
     <>
       <Box>
         <Card>
           <div className="main-container">
-            {allArticles.map((singleArticle) => {
+            {draftedArticles?.map((singleArticle) => {
               return (
                 <Link
                   className="main-articles"

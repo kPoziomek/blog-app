@@ -22,7 +22,7 @@ export const loginUserAPI = (data) => {
 export const authMe = () => {
   return instance.get('/auth/me');
 };
-export const getArticles = async () => {
+export const getArticles = () => {
   return instance.get('/articles');
 };
 

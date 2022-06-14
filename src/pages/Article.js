@@ -1,19 +1,38 @@
-import { Avatar, Card, CardHeader } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Avatar, Card, CardHeader, CircularProgress } from '@mui/material';
+import { isEmpty } from 'lodash';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getSingleArticle } from '../helpers/axiosConfig';
+import dompurify from 'dompurify';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { getSingleArticleRedux } from '../features/articleSlice';
 import './Article.css';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getArticle,
+  loadingSingleArticleSelector,
+} from '../features/selectors';
 
 const Article = () => {
+  const dispatch = useDispatch();
+  const { author, title, content } = useSelector(getArticle);
+  const loadingSingleArticle = useSelector(loadingSingleArticleSelector);
   let { id } = useParams();
-  const [articleData, setArticleData] = useState();
+  const sanitizer = dompurify.sanitize;
   useEffect(() => {
-    getSingleArticle(id).then(({ data }) => {
-      setArticleData(data);
-    });
-  }, [id]);
+    dispatch(getSingleArticleRedux(id));
+  }, [dispatch, id]);
+
+  if (loadingSingleArticle) {
+    return <CircularProgress />;
+  }
+
+  if (isEmpty(author)) {
+    return (
+      <div className="empty-array">
+        <h2>We are looking for article </h2>
+      </div>
+    );
+  }
 
   return (
     <div className="mainArticle">
@@ -29,7 +48,7 @@ const Article = () => {
         </Avatar>
       </header>
 
-      {articleData && (
+      {
         <Card
           className="mainContainer"
           sx={{ mx: 'auto', p: 2, border: '1px dashed grey' }}
@@ -37,17 +56,17 @@ const Article = () => {
           <CardHeader
             sx={{ maxWidth: 245 }}
             avatar={<Avatar />}
-            title={`${articleData.author.firstName} ${articleData.author.lastName}`}
+            title={`${author.firstName} ${author.lastName}`}
             subheader="02/02/2022"
           />
 
           <section>
-            <h3>{articleData.title}</h3>
+            <h3>{title}</h3>
             <img src="" alt="" />
-            <div dangerouslySetInnerHTML={{ __html: articleData.content }} />
+            <div dangerouslySetInnerHTML={{ __html: sanitizer(content) }} />
           </section>
         </Card>
-      )}
+      }
     </div>
   );
 };

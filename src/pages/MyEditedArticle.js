@@ -1,35 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import ArticleForm from './components/ArticleForm';
-import { getSingleArticle, editSingleArticle } from '../helpers/axiosConfig';
+import { Box, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getSingleArticleRedux,
+  editSingleArticleRedux,
+} from '../features/articleSlice';
+import {
+  getMyArticle,
+  isEditedArticleSelector,
+  loadingSingleArticleSelector,
+} from '../features/selectors';
+
 const MyEditedArticle = () => {
-  const [singleArticleData, setSingleArticleData] = useState(null);
+  const dispatch = useDispatch();
+
+  const article = useSelector(getMyArticle);
+  const isEdited = useSelector(isEditedArticleSelector);
+  const loadingSingleArticle = useSelector(loadingSingleArticleSelector);
   const { id } = useParams();
   const navigate = useNavigate();
   useEffect(() => {
-    getSingleArticle(id).then(({ data }) => setSingleArticleData(data));
-  }, [id]);
+    dispatch(getSingleArticleRedux(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    isEdited && navigate(`/articles/${id}`);
+  }, [id, isEdited, navigate]);
 
   const handleSubmit = (values) => {
-    editSingleArticle(id, values).then((data) => {
-      const { id } = data.data;
-      navigate(`/articles/${id}`);
-    });
+    dispatch(editSingleArticleRedux({ id, values }));
   };
 
-  if (singleArticleData === null) {
+  if (loadingSingleArticle) {
     return (
-      <>
+      <Box sx={{ p: 1, m: 1, display: 'flex', justifyContent: 'center' }}>
         <p>Loading...</p>
-      </>
+        <CircularProgress />
+      </Box>
     );
   }
   const defaultData = {
-    title: singleArticleData.title,
-    summary: singleArticleData.summary,
-    content: singleArticleData.content,
-    publish: !!singleArticleData.publishedAt,
+    title: article.title,
+    summary: article.summary,
+    content: article.content,
+    publish: !!article.publishedAt,
   };
   return (
     <ArticleForm
